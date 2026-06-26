@@ -17,10 +17,11 @@
             --bold-pink: #ef7aa4;
             --accent-blue: #6eaff0;
             --accent-pink: #ffe8ef;
-            --text-dark: #f290b3;
+            --text-dark: #f290b3; /* Sesuai request */
             
-            --app-shadow: 0 10px 25px rgba(242, 144, 179, 0.15);
-            --inner-glow: inset 0 2px 4px rgba(255, 255, 255, 0.8);
+            --shadow-pink: 0 15px 35px rgba(239, 122, 164, 0.15);
+            --shadow-blue: 0 15px 35px rgba(110, 175, 240, 0.25);
+            --shadow-solid: 6px 6px 0px var(--soft-pink);
         }
 
         /* ================= RESET & BASE ================= */
@@ -29,347 +30,392 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--light-pink);
+            /* Polka-dot pattern biar rame tapi tetep estetik */
+            background-image: radial-gradient(rgba(242, 144, 179, 0.2) 2px, transparent 2px);
+            background-size: 20px 20px;
             color: var(--bold-pink);
             overflow-x: hidden;
-            overscroll-behavior: none; /* Mencegah bounce effect default browser */
+            /* Scroll behavior dinonaktifkan di sini karena kita pakai JS khusus untuk navigasi */
         }
 
         h1, h2, h3, h4 { font-family: 'Quicksand', sans-serif; }
 
-        /* ================= SPLASH SCREEN (LOADING) ================= */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: var(--bg-white); z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .splash-icon {
-            font-size: 60px; animation: heartbeat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
-        }
-        .splash-text { font-family: 'Quicksand'; font-size: 24px; font-weight: 900; margin-top: 20px; color: var(--bold-pink); letter-spacing: -1px;}
-        .loading-track { width: 150px; height: 6px; background: var(--light-pink); border-radius: 10px; margin-top: 15px; overflow: hidden; }
-        .loading-progress { width: 0%; height: 100%; background: var(--accent-blue); border-radius: 10px; animation: loadingFill 2s ease forwards; }
-
-        @keyframes heartbeat { 0% { transform: scale(1); } 20% { transform: scale(1.15); } 40% { transform: scale(1); } }
-        @keyframes loadingFill { 0% { width: 0%; } 100% { width: 100%; } }
-        .splash-hidden { opacity: 0; pointer-events: none; transform: scale(1.05); }
-
-        /* ================= BOTTOM FLOATING NAV (MODERN APP STYLE) ================= */
+        /* ================= FLOATING NAVBAR ================= */
         nav {
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 450px; padding: 12px 20px;
-            display: flex; justify-content: space-around; align-items: center;
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-radius: 30px; z-index: 1000;
-            box-shadow: 0 15px 35px rgba(239, 122, 164, 0.2);
-            border: 2px solid var(--light-pink);
+            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 700px; padding: 12px 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px; z-index: 1000;
+            box-shadow: var(--shadow-pink);
+            border: 2px solid var(--bg-white);
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            text-decoration: none; color: var(--soft-pink); font-family: 'Quicksand';
-            font-size: 11px; font-weight: 800; transition: 0.3s;
+        .logo { font-family: 'Quicksand', sans-serif; font-weight: 900; font-size: 22px; color: var(--bold-pink); text-decoration: none; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--soft-pink); font-weight: 800; font-size: 15px; transition: 0.3s; padding: 6px 12px; border-radius: 20px; }
+        .nav-links a:hover { color: var(--accent-blue); background: var(--light-pink); transform: scale(1.05); }
+        
+        /* Tombol interaktif */
+        .btn-action {
+            background: var(--accent-blue); border: none; padding: 10px 20px;
+            border-radius: 25px; font-family: 'Quicksand', sans-serif; font-weight: 800; font-size: 14px;
+            color: var(--bg-white); cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 12px rgba(110, 175, 240, 0.4);
         }
-        .nav-icon { font-size: 20px; transition: 0.3s; }
-        .nav-item:hover, .nav-item.active { color: var(--accent-blue); }
-        .nav-item:hover .nav-icon, .nav-item.active .nav-icon { transform: translateY(-4px) scale(1.1); }
+        .btn-action:hover { transform: scale(1.1) rotate(-2deg); background: var(--bold-pink); box-shadow: 0 6px 15px rgba(239, 122, 164, 0.5); }
+        .btn-action:active { transform: scale(0.9); } 
 
-        /* ================= APP LAYOUT (COMPACT & DENSE) ================= */
+        /* ================= LAYOUT BENTO GRID ================= */
         #app-wrapper {
-            max-width: 600px; /* Lebar dibatasi agar terasa seperti UI aplikasi tablet/HP */
+            max-width: 950px;
             margin: 0 auto;
-            padding: 30px 16px 120px; /* Padding sangat rapat */
-            display: flex; flex-direction: column; gap: 16px; /* Gap diperkecil (16px) agar tidak spacious */
+            padding: 100px 20px 80px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
 
-        /* App Header */
-        .app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .header-title { font-size: 28px; font-weight: 900; line-height: 1.1; letter-spacing: -1px; }
-        .header-subtitle { font-size: 13px; color: var(--soft-pink); font-weight: 600;}
-        .profile-btn { width: 45px; height: 45px; background: var(--bg-white); border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 20px; box-shadow: var(--app-shadow); cursor: pointer; border: 2px solid var(--light-pink);}
+        /* Utility grid spans */
+        .col-3 { grid-column: span 3; }
+        .col-2 { grid-column: span 2; }
+        .col-1 { grid-column: span 1; }
 
-        /* Widget Container Modern */
+        /* ================= WIDGET COMPONENT ================= */
         .widget {
-            background: var(--bg-white); border-radius: 28px; padding: 20px; /* Padding dalam diperkecil dari 35px ke 20px */
-            box-shadow: var(--app-shadow); position: relative; overflow: hidden;
-            box-shadow: var(--inner-glow), var(--app-shadow);
-            border: 1px solid var(--light-pink);
+            border-radius: 35px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow-pink);
+            border: 3px solid var(--bg-white);
         }
-        .w-blue { background: var(--accent-blue); color: var(--bg-white); border-color: var(--accent-blue); }
+        .widget:hover { transform: translateY(-8px) scale(1.02); box-shadow: var(--shadow-solid); z-index: 10; }
+
+        /* Color Blocking & Decorations */
+        .w-white { background: var(--bg-white); color: var(--bold-pink); }
+        .w-blue { background: var(--accent-blue); color: var(--bg-white); box-shadow: var(--shadow-blue); border-color: var(--accent-blue); }
         .w-pink { background: var(--bold-pink); color: var(--bg-white); border-color: var(--bold-pink); }
+        .w-light { background: var(--light-pink); color: var(--bold-pink); border-color: var(--soft-pink); }
         
-        .widget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .widget-title { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px;}
-        .widget-action { font-family: 'Inter'; font-size: 12px; font-weight: 700; color: var(--accent-blue); text-decoration: none; background: var(--light-pink); padding: 4px 10px; border-radius: 12px; cursor: pointer; }
+        /* Hiasan background abstrak di dalam widget (bikin rame) */
+        .deco-circle { position: absolute; border-radius: 50%; opacity: 0.1; background: var(--bg-white); pointer-events: none; }
+        .w-blue .deco-circle { width: 150px; height: 150px; top: -50px; right: -30px; }
+        .w-pink .deco-circle { width: 200px; height: 200px; bottom: -80px; left: -50px; }
+        .w-white .deco-circle { width: 100px; height: 100px; background: var(--light-pink); top: 20px; right: 20px; opacity: 0.5;}
 
-        /* ================= COMPACT WIDGETS ================= */
-        
-        /* 1. Dashboard Row (Grid 2 Kolom Rapat) */
-        .dash-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        
-        /* Mood Minimalis */
-        .mood-compact { display: flex; gap: 8px; justify-content: space-between; }
-        .mood-btn { width: 40px; height: 40px; background: var(--bg-white); border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .mood-btn.active { background: var(--light-pink); transform: scale(1.1); border: 2px solid var(--bold-pink); }
+        .widget-title { font-size: 24px; font-weight: 900; margin-bottom: 6px; position: relative; z-index: 2; display: flex; align-items: center; gap: 8px;}
+        .widget-subtitle { font-size: 14px; font-weight: 600; opacity: 0.85; margin-bottom: 20px; position: relative; z-index: 2; }
 
-        /* Energy Stats */
-        .stat-ring-container { display: flex; align-items: center; gap: 12px; }
-        .stat-ring { width: 50px; height: 50px; border-radius: 50%; background: conic-gradient(var(--bg-white) 75%, rgba(255,255,255,0.3) 0); display: flex; justify-content: center; align-items: center; }
-        .stat-inner { width: 38px; height: 38px; background: var(--accent-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; font-weight: 800; }
+        /* ================= WIDGET CONTENTS ================= */
 
-        /* 2. Tracklist (Gaya Lock Screen Player) */
-        .player-compact { display: flex; align-items: center; gap: 15px; }
-        .player-art { width: 60px; height: 60px; background: var(--light-pink); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: inset 0 0 10px var(--soft-pink); }
-        .player-info h3 { font-size: 15px; font-weight: 800; margin-bottom: 2px; line-height: 1.2; }
-        .player-info p { font-size: 12px; color: var(--soft-pink); font-weight: 600; }
-        .play-circle { width: 40px; height: 40px; background: var(--accent-blue); color: var(--bg-white); border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 16px; margin-left: auto; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(110, 175, 240, 0.4);}
-        .play-circle:active { transform: scale(0.9); }
+        /* 1. Greeting */
+        .greeting-header { text-align: center; padding: 10px 0 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+        .greeting-date { font-family: 'Quicksand', sans-serif; background: var(--bg-white); color: var(--accent-blue); padding: 8px 25px; border-radius: 25px; font-weight: 800; font-size: 15px; margin-bottom: 15px; border: 2px dashed var(--soft-pink); display: inline-block;}
+        .greeting-title { font-size: 50px; color: var(--bold-pink); font-weight: 900; letter-spacing: -1.5px; line-height: 1.1; }
 
-        /* 3. The Concept (Gaya App Card) */
-        .concept-text { font-size: 14px; line-height: 1.5; font-weight: 500; color: var(--bold-pink); margin-bottom: 10px; }
-        .read-more { font-size: 13px; font-weight: 700; color: var(--accent-blue); cursor: pointer; display: inline-block;}
+        /* 2. Mood */
+        .mood-container { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 2;}
+        .mood-bubble { width: 55px; height: 55px; border-radius: 20px; background: var(--bg-white); color: var(--accent-blue); display: flex; justify-content: center; align-items: center; font-size: 28px; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .mood-bubble:hover, .mood-bubble.active { transform: scale(1.15) rotate(-10deg); background: var(--light-pink); color: var(--bold-pink); border: 2px solid var(--bold-pink); }
 
-        /* 4. Horizontal Scroll Crew (Modern UI) */
-        .horizontal-scroll {
-            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; margin-right: -20px; padding-right: 20px;
-            scroll-snap-type: x mandatory; scrollbar-width: none; /* Hide scrollbar */
+        /* 3. Daily Quests */
+        .quest-list { list-style: none; display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 2;}
+        .quest-item { background: rgba(255,255,255,0.25); padding: 12px 15px; border-radius: 18px; display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .quest-item:active { transform: scale(0.92); }
+        .checkbox { width: 22px; height: 22px; border-radius: 8px; border: 3px solid var(--bg-white); display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        .quest-item.done .checkbox { background: var(--bg-white); color: var(--bold-pink); transform: rotate(360deg);}
+        .quest-item.done .checkbox::after { content: '✔'; font-size: 12px; font-weight: 900;}
+        .quest-item.done span { text-decoration: line-through; opacity: 0.6; }
+
+        /* 4. Stats (NEW) */
+        .stats-bars { display: flex; align-items: flex-end; gap: 10px; height: 100px; margin-top: 10px; position: relative; z-index: 2;}
+        .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .bar { width: 100%; background: var(--bg-white); border-radius: 10px; transition: height 1s ease-out; position: relative; overflow: hidden;}
+        .bar::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bold-pink), transparent); opacity: 0.5;}
+        .bar-label { font-size: 12px; font-weight: 800; }
+
+        /* 5. Sticky Note (NEW) */
+        .sticky-note { font-family: 'Quicksand'; font-size: 18px; font-weight: 700; line-height: 1.5; color: var(--bold-pink); text-align: center; position: relative; z-index: 2; padding-top: 10px;}
+        .pin { width: 15px; height: 15px; background: var(--accent-blue); border-radius: 50%; position: absolute; top: -5px; left: 50%; transform: translateX(-50%); box-shadow: 0 4px 5px rgba(0,0,0,0.1); border: 2px solid var(--bg-white);}
+
+        /* 6. Music Player */
+        .player-flex { display: flex; align-items: center; gap: 20px; position: relative; z-index: 2;}
+        .album-art { width: 90px; height: 90px; background: var(--light-pink); border-radius: 25px; display: flex; justify-content: center; align-items: center; font-size: 40px; flex-shrink: 0; animation: float 3s ease-in-out infinite; box-shadow: inset 0 0 20px var(--soft-pink), 0 10px 20px rgba(239, 122, 164, 0.2); }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(5deg); } }
+        .song-info h3 { font-size: 20px; margin-bottom: 4px; font-weight: 900;}
+        .song-info p { font-size: 14px; color: var(--soft-pink); font-weight: 700; margin-bottom: 12px; }
+
+        /* 7. The Concept */
+        .concept-text { font-size: 16px; line-height: 1.6; font-weight: 600; margin-bottom: 15px; position: relative; z-index: 2;}
+
+        /* 8. The Crew */
+        .crew-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; position: relative; z-index: 2;}
+        .crew-card { background: var(--bg-white); border-radius: 25px; padding: 20px 10px; text-align: center; transition: 0.3s; border: 2px solid var(--light-pink); box-shadow: 0 5px 15px rgba(242, 144, 179, 0.1);}
+        .crew-card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
+        .crew-avatar { width: 65px; height: 65px; border-radius: 35px; background: var(--light-pink); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 30px; animation: float 4s ease-in-out infinite alternate; }
+        .crew-name { font-family: 'Quicksand', sans-serif; font-size: 18px; font-weight: 900; margin-bottom: 5px; color: var(--bold-pink);}
+        .crew-role { font-size: 11px; font-weight: 800; background: var(--accent-blue); color: var(--bg-white); padding: 4px 10px; border-radius: 12px; display: inline-block; }
+
+        /* 9. Rules */
+        .rule-item { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start; position: relative; z-index: 2; background: var(--light-pink); padding: 15px; border-radius: 20px; transition: 0.3s;}
+        .rule-item:hover { transform: translateX(10px); background: var(--bg-white); box-shadow: var(--shadow-pink); }
+        .rule-number { background: var(--bold-pink); color: var(--bg-white); width: 30px; height: 30px; border-radius: 15px; display: flex; justify-content: center; align-items: center; font-family: 'Quicksand'; font-weight: 900; font-size: 15px; flex-shrink: 0;}
+        .rule-text { font-size: 14px; line-height: 1.5; font-weight: 600; padding-top: 5px; }
+
+        /* 10. DOs DON'Ts */
+        .dd-box { background: rgba(255,255,255,0.25); padding: 15px; border-radius: 20px; margin-bottom: 15px; position: relative; z-index: 2; transition: 0.3s;}
+        .dd-box:hover { transform: scale(1.05); background: var(--bg-white); color: var(--accent-blue);}
+
+        /* 11. Tags */
+        .tags-container { display: flex; flex-wrap: wrap; gap: 10px; position: relative; z-index: 2;}
+        .member-tag { background: var(--light-pink); color: var(--bold-pink); padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; border: 2px solid transparent;}
+        .member-tag:hover { background: var(--bg-white); border-color: var(--accent-blue); color: var(--accent-blue); transform: scale(1.1) rotate(3deg); z-index: 5;}
+
+        /* ================= ANIMASI SCROLL & NAVIGASI ================= */
+        /* Animasi Pop saat kotak muncul pas discroll */
+        .reveal { opacity: 0; transform: scale(0.8) translateY(50px); transition: all 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .reveal.active { opacity: 1; transform: scale(1) translateY(0); }
+
+        /* Animasi Berkedip/Membal khusus pas diklik dari Navigasi */
+        @keyframes target-pop {
+            0% { transform: scale(1); box-shadow: var(--shadow-pink); border-color: var(--bg-white); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(110, 175, 240, 0.4); border-color: var(--accent-blue); z-index: 100;}
+            100% { transform: scale(1); box-shadow: var(--shadow-pink); border-color: var(--bg-white); }
         }
-        .horizontal-scroll::-webkit-scrollbar { display: none; }
-        .crew-story {
-            min-width: 100px; background: var(--light-pink); border-radius: 24px; padding: 15px 10px;
-            display: flex; flex-direction: column; align-items: center; text-align: center; scroll-snap-align: start;
+        .pop-highlight { animation: target-pop 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 850px) {
+            #app-wrapper { grid-template-columns: repeat(2, 1fr); }
+            .col-3 { grid-column: span 2; }
         }
-        .story-avatar { width: 55px; height: 55px; border-radius: 20px; background: var(--bg-white); font-size: 28px; display: flex; justify-content: center; align-items: center; margin-bottom: 8px; border: 2px solid var(--accent-blue); }
-        .story-name { font-size: 13px; font-family: 'Quicksand'; font-weight: 800; }
-        .story-role { font-size: 10px; font-weight: 700; color: var(--soft-pink); }
-
-        /* 5. Rules (Gaya iOS Settings List) */
-        .settings-list { display: flex; flex-direction: column; gap: 1px; background: var(--light-pink); border-radius: 20px; overflow: hidden; border: 1px solid var(--light-pink);}
-        .settings-item { background: var(--bg-white); padding: 16px; display: flex; align-items: center; gap: 12px; transition: 0.2s; cursor: pointer; }
-        .settings-item:active { background: var(--light-pink); }
-        .set-icon { width: 32px; height: 32px; background: var(--accent-blue); color: var(--bg-white); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 14px; }
-        .set-text { flex-grow: 1; font-size: 14px; font-weight: 600; line-height: 1.4; }
-        .set-arrow { color: var(--soft-pink); font-weight: 800; font-size: 16px; }
-
-        /* 6. Tags Rapat */
-        .tags-compact { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag-pill { background: var(--light-pink); color: var(--bold-pink); padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; transition: 0.2s; cursor: default; }
-        .tag-pill:hover { background: var(--accent-blue); color: var(--bg-white); transform: scale(1.05); }
-
-        /* Animasi Muncul Berurutan (Staggered Animation) */
-        .stagger-item { opacity: 0; transform: translateY(20px) scale(0.95); transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
-        .stagger-item.visible { opacity: 1; transform: translateY(0) scale(1); }
-
+        @media (max-width: 600px) {
+            #app-wrapper { grid-template-columns: 1fr; }
+            .col-3, .col-2 { grid-column: span 1; }
+            .nav-links { display: none; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- LOADING SPLASH SCREEN -->
-    <div id="splash-screen">
-        <div class="splash-icon">💌</div>
-        <div class="splash-text">the.project</div>
-        <div class="loading-track"><div class="loading-progress"></div></div>
-    </div>
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#" class="logo">the.project ✨</a>
+        <div class="nav-links">
+            <a href="https://adole-quiz.vercel.app" target="_blank">Quiz</a>
+            <a href="#concept" class="nav-btn" data-id="Konsep" data-en="Concept">Konsep</a>
+            <a href="#crew" class="nav-btn">Crew</a>
+            <a href="#rules" class="nav-btn" data-id="Aturan" data-en="Rules">Aturan</a>
+        </div>
+        <button id="lang-toggle" class="btn-action" onclick="toggleLanguage()">EN</button>
+    </nav>
 
-    <!-- MAIN APP LAYOUT -->
+    <!-- GRID LAYOUT -->
     <div id="app-wrapper">
-
-        <!-- HEADER -->
-        <div class="app-header stagger-item">
-            <div>
-                <div class="header-subtitle" id="current-date">Today</div>
-                <div class="header-title lang" data-id="Halo, Bestie!" data-en="Hi, Bestie!">Halo, Bestie!</div>
-            </div>
-            <!-- Fitur ganti bahasa aku jadikan tombol profil di sudut kanan agar rapi -->
-            <div class="profile-btn" onclick="toggleLanguage()" id="lang-toggle">🇮🇩</div>
+        
+        <!-- HERO GREETING -->
+        <div class="widget w-light col-3 reveal greeting-header" style="background: transparent; border: none; box-shadow: none;">
+            <div class="greeting-date" id="current-date">Today</div>
+            <h1 class="greeting-title lang" data-id="Halo, Bestie! ✨" data-en="Hello, Bestie! ✨">Halo, Bestie! ✨</h1>
         </div>
 
-        <!-- ROW 1: MOOD & ENERGY (Gaya Dashboard Terpisah 2 Kolom) -->
-        <div class="dash-row">
-            <!-- Mood Widget Biru -->
-            <div class="widget w-blue stagger-item" style="padding: 16px;">
-                <h3 style="font-size: 14px; margin-bottom: 12px; font-family: 'Inter';">My Vibe</h3>
-                <div class="mood-compact">
-                    <div class="mood-btn active" onclick="setMood(this)">✨</div>
-                    <div class="mood-btn" onclick="setMood(this)">🎧</div>
-                    <div class="mood-btn" onclick="setMood(this)">💤</div>
-                </div>
-            </div>
-            
-            <!-- Energy Widget Pink -->
-            <div class="widget w-pink stagger-item" style="padding: 16px;">
-                <h3 style="font-size: 14px; margin-bottom: 12px; font-family: 'Inter';">Team Energy</h3>
-                <div class="stat-ring-container">
-                    <div class="stat-ring"><div class="stat-inner">75%</div></div>
-                    <div style="font-size: 11px; font-weight: 600; line-height: 1.3;">Siap<br>Berkreasi!</div>
-                </div>
+        <!-- MOOD WIDGET -->
+        <div class="widget w-blue col-1 reveal">
+            <div class="deco-circle"></div>
+            <h2 class="widget-title lang" data-id="Vibe hari ini?" data-en="How are you feeling?">Vibe hari ini?</h2>
+            <p class="widget-subtitle lang" data-id="Pilih mood-mu 💖" data-en="Select your mood 💖">Pilih mood-mu 💖</p>
+            <div class="mood-container">
+                <div class="mood-bubble active" onclick="playAnim(this)">✨</div>
+                <div class="mood-bubble" onclick="playAnim(this)">🎧</div>
+                <div class="mood-bubble" onclick="playAnim(this)">💤</div>
+                <div class="mood-bubble" onclick="playAnim(this)">☕</div>
             </div>
         </div>
 
-        <!-- ROW 2: COMPACT MUSIC PLAYER -->
-        <div class="widget stagger-item" style="padding: 16px;">
-            <div class="player-compact">
-                <div class="player-art">🍓</div>
-                <div class="player-info">
-                    <h3 class="lang" data-id="Lagu Hari Ini" data-en="Today's Song">Lagu Hari Ini</h3>
-                    <p>you seem pretty sad for a girl...</p>
-                </div>
-                <div class="play-circle" onclick="window.open('https://music.apple.com/', '_blank')">▶</div>
+        <!-- DAILY QUESTS -->
+        <div class="widget w-pink col-1 reveal">
+            <div class="deco-circle"></div>
+            <h2 class="widget-title lang" data-id="Daily Quests 🎯" data-en="Daily Quests 🎯">Daily Quests 🎯</h2>
+            <p class="widget-subtitle lang" data-id="Klik kalau beres!" data-en="Tap to complete!">Klik kalau beres!</p>
+            <ul class="quest-list">
+                <li class="quest-item" onclick="toggleQuest(this)">
+                    <div class="checkbox"></div><span class="lang" data-id="Minum air putih 💧" data-en="Drink water 💧">Minum air putih 💧</span>
+                </li>
+                <li class="quest-item" onclick="toggleQuest(this)">
+                    <div class="checkbox"></div><span class="lang" data-id="Tulis paragraf ✍️" data-en="Write a paragraph ✍️">Tulis paragraf ✍️</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- STATS WIDGET (NEW!) -->
+        <div class="widget w-white col-1 reveal">
+            <div class="deco-circle"></div>
+            <h2 class="widget-title lang" data-id="Energy Level 🔋" data-en="Energy Level 🔋">Energy Level 🔋</h2>
+            <div class="stats-bars">
+                <div class="bar-col"><div class="bar" style="height: 40%;"></div><span class="bar-label">M</span></div>
+                <div class="bar-col"><div class="bar" style="height: 70%;"></div><span class="bar-label">T</span></div>
+                <div class="bar-col"><div class="bar" style="height: 50%;"></div><span class="bar-label">W</span></div>
+                <div class="bar-col"><div class="bar" style="height: 90%;"></div><span class="bar-label">T</span></div>
+                <div class="bar-col"><div class="bar" style="height: 100%; background: var(--accent-blue);"></div><span class="bar-label" style="color: var(--accent-blue)">F</span></div>
             </div>
         </div>
 
-        <!-- ROW 3: CONCEPT (App Card) -->
-        <div class="widget stagger-item" id="concept">
-            <div class="widget-header">
-                <div class="widget-title">🎬 <span class="lang" data-id="Konsep" data-en="Concept">Konsep</span></div>
-                <a href="https://adole-quiz.vercel.app" target="_blank" class="widget-action">Quiz ↗</a>
-            </div>
-            <p class="concept-text lang" data-id="Seperti adegan film kom-rom tahun 90-an, ini adalah tempat di mana semuanya dimulai. Tempat penuh tawa, kekacauan yang disengaja, dan dialog naskah Emma & Adler." data-en="Like a 90s rom-com scene, this is where it begins. A place full of laughter, intentional chaos, and Emma & Adler's script dialogues.">
-                Seperti adegan film kom-rom tahun 90-an, ini adalah tempat di mana semuanya dimulai. Tempat penuh tawa, kekacauan yang disengaja, dan dialog naskah Emma & Adler.
-            </p>
-            <div class="read-more lang" data-id="Baca selengkapnya..." data-en="Read more...">Baca selengkapnya...</div>
-        </div>
-
-        <!-- ROW 4: CREW (Horizontal Scroll ala IG Story) -->
-        <div class="widget stagger-item" id="crew">
-            <div class="widget-header">
-                <div class="widget-title">📸 Crew</div>
-                <div class="widget-action">Lihat Semua</div>
-            </div>
-            <div class="horizontal-scroll">
-                <div class="crew-story"><div class="story-avatar">📸</div><div class="story-name">Adler</div><div class="story-role">Overthinker</div></div>
-                <div class="crew-story"><div class="story-avatar">📼</div><div class="story-name">Emma</div><div class="story-role">Catalyst</div></div>
-                <div class="crew-story"><div class="story-avatar">🍕</div><div class="story-name">Leo</div><div class="story-role">Critic</div></div>
-                <div class="crew-story"><div class="story-avatar">📱</div><div class="story-name">Mia</div><div class="story-role">Aesthetic Dir.</div></div>
-                <!-- Kartu ekstra biar bisa di-scroll panjang -->
-                <div class="crew-story"><div class="story-avatar">✨</div><div class="story-name">You</div><div class="story-role">Join Us</div></div>
+        <!-- MUSIC PLAYER -->
+        <div class="widget w-white col-2 reveal player-flex">
+            <div class="deco-circle"></div>
+            <div class="album-art">🎧</div>
+            <div class="song-info" style="flex-grow: 1;">
+                <h3 class="lang" data-id="Lagu Hari Ini" data-en="Today's Song">Lagu Hari Ini</h3>
+                <p>you seem pretty sad for a girl so in love</p>
+                <a href="https://music.apple.com/" target="_blank" class="btn-action" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <span style="font-size: 16px;"></span> Play on Apple Music
+                </a>
             </div>
         </div>
 
-        <!-- ROW 5: RULES (iOS Settings Style) -->
-        <div class="widget stagger-item" style="padding: 16px; background: transparent; border: none; box-shadow: none;" id="rules">
-            <div class="widget-header" style="padding: 0 5px;">
-                <div class="widget-title">📌 Rules</div>
-            </div>
-            <div class="settings-list">
-                <div class="settings-item">
-                    <div class="set-icon">1</div>
-                    <div class="set-text lang" data-id="Hargai waktu & energi." data-en="Respect time & energy.">Hargai waktu & energi.</div>
-                    <div class="set-arrow">›</div>
-                </div>
-                <div class="settings-item">
-                    <div class="set-icon">2</div>
-                    <div class="set-text lang" data-id="No unnecessary drama." data-en="No unnecessary drama.">No unnecessary drama.</div>
-                    <div class="set-arrow">›</div>
-                </div>
-                <div class="settings-item" style="background: var(--light-pink);">
-                    <div class="set-icon" style="background: var(--bold-pink);">✅</div>
-                    <div class="set-text lang" style="color: var(--bold-pink);" data-id="DOs: Bawa ide gila." data-en="DOs: Bring crazy ideas.">DOs: Bawa ide gila.</div>
-                </div>
-                <div class="settings-item" style="background: var(--light-pink);">
-                    <div class="set-icon" style="background: var(--text-dark);">🚫</div>
-                    <div class="set-text lang" style="color: var(--bold-pink);" data-id="DON'Ts: Ghosting tim." data-en="DON'Ts: Ghosting the team.">DON'Ts: Ghosting tim.</div>
-                </div>
+        <!-- STICKY NOTE (NEW!) -->
+        <div class="widget w-light col-1 reveal">
+            <div class="pin"></div>
+            <p class="sticky-note lang" data-id="&quot;Apapun yang terjadi hari ini, kamu udah ngelakuin yang terbaik! 💌&quot;" data-en="&quot;Whatever happens today, you did your absolute best! 💌&quot;">"Apapun yang terjadi hari ini, kamu udah ngelakuin yang terbaik! 💌"</p>
+        </div>
+
+        <!-- CONCEPT -->
+        <div class="widget w-white col-3 reveal" id="concept">
+            <div class="deco-circle"></div>
+            <h2 class="widget-title lang" data-id="Konsep Kami 🎬" data-en="The Concept 🎬">Konsep Kami 🎬</h2>
+            <p class="widget-subtitle lang" data-id="Sebuah cerita di balik layar" data-en="A story behind the scenes">Sebuah cerita di balik layar</p>
+            <p class="concept-text lang" data-id="Seperti adegan film komedi romantis tahun 90-an, ini adalah tempat di mana semuanya dimulai. Kami membangun ruang ini dengan sedikit kekacauan yang disengaja, tawa, dan dialog yang mengalir begitu saja." data-en="Just like a scene from a 90s romantic comedy, this is where it all begins. We built this space with intentional chaos, laughter, and dialogues that flow naturally.">Seperti adegan film komedi romantis tahun 90-an, ini adalah tempat di mana semuanya dimulai. Kami membangun ruang ini dengan sedikit kekacauan yang disengaja, tawa, dan dialog yang mengalir begitu saja.</p>
+            <p class="concept-text lang" data-id="Dari naskah yang belum selesai antara tokoh Adler dan Emma, hingga pencarian anggota tim yang hilang, kami berharap proyek ini bisa menjadi tempat kedua yang aman dan menyenangkan untuk kita semua." data-en="From unfinished scripts between Adler and Emma, to the search for missing team members, we hope this project becomes a safe and fun second home for us all.">Dari naskah yang belum selesai antara tokoh Adler dan Emma, hingga pencarian anggota tim yang hilang, kami berharap proyek ini bisa menjadi tempat kedua yang aman dan menyenangkan untuk kita semua.</p>
+        </div>
+
+        <!-- CREW -->
+        <div class="widget w-light col-3 reveal" id="crew">
+            <h2 class="widget-title">The Love-Crew 📸</h2>
+            <p class="widget-subtitle lang" data-id="Kenali 4 Inti Kami" data-en="Meet Our Core 4">Kenali 4 Inti Kami</p>
+            <div class="crew-grid">
+                <div class="crew-card"><div class="crew-avatar">📸</div><div class="crew-name">Adler</div><div class="crew-role">Overthinker</div></div>
+                <div class="crew-card"><div class="crew-avatar">📼</div><div class="crew-name">Emma</div><div class="crew-role">Catalyst</div></div>
+                <div class="crew-card"><div class="crew-avatar">🍕</div><div class="crew-name">Leo</div><div class="crew-role">Critic</div></div>
+                <div class="crew-card"><div class="crew-avatar">📱</div><div class="crew-name">Mia</div><div class="crew-role">Aesthetic Dir.</div></div>
             </div>
         </div>
 
-        <!-- ROW 6: DAMSELS & LADS (Compact Tags) -->
-        <div class="widget stagger-item">
-            <div class="widget-header">
-                <div class="widget-title">💖 Damsels & Lads</div>
-                <div class="widget-action">46 Members</div>
+        <!-- RULES -->
+        <div class="widget w-white col-2 reveal" id="rules">
+            <h2 class="widget-title">The Rules 📌</h2>
+            <p class="widget-subtitle lang" data-id="Panduan Komunitas" data-en="Community Guidelines">Panduan Komunitas</p>
+            <div class="rule-item"><div class="rule-number">1</div><div class="rule-text lang" data-id="Saling menghargai waktu dan energi." data-en="Respect each other's time and energy.">Saling menghargai waktu dan energi.</div></div>
+            <div class="rule-item"><div class="rule-number">2</div><div class="rule-text lang" data-id="Tidak ada drama yang tidak perlu." data-en="No unnecessary drama.">Tidak ada drama yang tidak perlu.</div></div>
+            <div class="rule-item"><div class="rule-number">3</div><div class="rule-text lang" data-id="Lorem ipsum dolor sit amet, consectetur." data-en="Lorem ipsum dolor sit amet, consectetur.">Lorem ipsum dolor sit amet, consectetur.</div></div>
+        </div>
+
+        <!-- DOS & DONTS -->
+        <div class="widget w-blue col-1 reveal">
+            <div class="deco-circle"></div>
+            <h2 class="widget-title">Ethics ⚖️</h2>
+            <div class="dd-box">
+                <h4 style="font-size: 16px; margin-bottom: 5px;">✅ DO</h4>
+                <p style="font-size: 13px; font-weight: 600;" class="lang" data-id="Bawa ide gila & komunikasi sehat." data-en="Bring crazy ideas & communicate.">Bawa ide gila & komunikasi sehat.</p>
             </div>
-            <div class="tags-compact" id="members-list">
+            <div class="dd-box" style="background: rgba(255,255,255,0.9); color: var(--bold-pink);">
+                <h4 style="font-size: 16px; margin-bottom: 5px;">🚫 DON'T</h4>
+                <p style="font-size: 13px; font-weight: 600;" class="lang" data-id="Ghosting atau energi negatif." data-en="Ghosting or negative energy.">Ghosting atau energi negatif.</p>
+            </div>
+        </div>
+
+        <!-- MEMBERS -->
+        <div class="widget w-white col-3 reveal">
+            <div class="deco-circle"></div>
+            <h2 class="widget-title">Damsels & Lads 💖</h2>
+            <p class="widget-subtitle lang" data-id="Keluarga Besar Kami" data-en="Our Extended Family">Keluarga Besar Kami</p>
+            <div class="tags-container" id="members-list">
                 <!-- Di-generate JS -->
             </div>
         </div>
 
     </div>
 
-    <!-- BOTTOM FLOATING NAV (MODERN APP) -->
-    <nav>
-        <a href="#app-wrapper" class="nav-item active" onclick="setActiveNav(this)">
-            <span class="nav-icon">🏠</span>
-            <span>Home</span>
-        </a>
-        <a href="#concept" class="nav-item" onclick="setActiveNav(this)">
-            <span class="nav-icon">🎬</span>
-            <span class="lang" data-id="Konsep" data-en="Concept">Konsep</span>
-        </a>
-        <a href="#crew" class="nav-item" onclick="setActiveNav(this)">
-            <span class="nav-icon">📸</span>
-            <span>Crew</span>
-        </a>
-        <a href="#rules" class="nav-item" onclick="setActiveNav(this)">
-            <span class="nav-icon">📌</span>
-            <span class="lang" data-id="Aturan" data-en="Rules">Aturan</span>
-        </a>
-    </nav>
-
+    <!-- JAVASCRIPT -->
     <script>
-        // --- 1. SPLASH SCREEN LOGIC ---
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.classList.add('splash-hidden');
-                setTimeout(() => splash.remove(), 600); // Hapus dari DOM setelah animasi selesai
-                
-                // Mulai jalankan animasi kemunculan kotak
-                triggerStaggerAnimation();
-            }, 2300); // Tahan layar loading selama 2.3 detik
-        });
+        // Set Tanggal Hari Ini
+        const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+        document.getElementById('current-date').innerText = "Today, " + new Date().toLocaleDateString('en-US', dateOptions);
 
-        // --- 2. STAGGERED ENTRANCE ANIMATION ---
-        function triggerStaggerAnimation() {
-            const items = document.querySelectorAll('.stagger-item');
-            items.forEach((item, index) => {
-                setTimeout(() => {
-                    item.classList.add('visible');
-                }, index * 120); // Kotak muncul bergantian dengan jeda 120ms
-            });
-        }
-
-        // --- 3. SET TANGGAL ---
-        const dateOpts = { weekday: 'short', month: 'short', day: 'numeric' };
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', dateOpts);
-
-        // --- 4. TOGGLE BILINGUAL ---
+        // Toggle Bilingual
         let isEnglish = false;
         function toggleLanguage() {
             isEnglish = !isEnglish;
-            document.getElementById('lang-toggle').innerText = isEnglish ? "🇬🇧" : "🇮🇩"; 
+            document.getElementById('lang-toggle').innerText = isEnglish ? "ID" : "EN"; 
             document.querySelectorAll('.lang').forEach(el => {
                 el.innerText = isEnglish ? el.getAttribute('data-en') : el.getAttribute('data-id');
             });
         }
 
-        // --- 5. INTERAKSI MOOD KECIL ---
-        function setMood(element) {
-            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+        // Interaksi Mood (Membal Unik)
+        function playAnim(element) {
+            document.querySelectorAll('.mood-bubble').forEach(b => b.classList.remove('active'));
             element.classList.add('active');
+            element.style.transform = 'scale(0.8)';
+            setTimeout(() => element.style.transform = '', 200);
         }
 
-        // --- 6. GENERATE 46 TAGS (DIBUAT COMPACT) ---
+        // Interaksi Checklist
+        function toggleQuest(element) {
+            element.classList.toggle('done');
+            element.style.transform = 'scale(0.85)';
+            setTimeout(() => element.style.transform = '', 200);
+        }
+
+        // Generate 46 Member Tags
         const membersList = document.getElementById('members-list');
         for(let i = 1; i <= 46; i++) {
             const tag = document.createElement('div');
-            tag.className = 'tag-pill';
-            tag.innerText = `Mem. ${i}`;
+            tag.className = 'member-tag';
+            tag.innerHTML = `<div class="tag-dot"></div> Member ${i}`;
             membersList.appendChild(tag);
         }
 
-        // --- 7. BOTTOM NAV ACTIVE STATE & SMOOTH SCROLL ---
-        function setActiveNav(element) {
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            element.classList.add('active');
-            
-            // Smooth Scroll Fix
-            const targetId = element.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            if(targetElement) {
-                const targetPos = targetElement.getBoundingClientRect().top + window.pageYOffset - 20;
-                window.scrollTo({ top: targetPos, behavior: 'smooth' });
-            }
-        }
+        // --- ANIMASI SCROLL (ELASTIC BOUNCE) ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -30px 0px" };
+
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                setTimeout(() => { entry.target.classList.add('active'); }, 50);
+                observer.unobserve(entry.target); 
+            });
+        }, revealOptions);
+
+        revealElements.forEach(el => { revealOnScroll.observe(el); });
+
+        // --- ANIMASI NAVIGASI (SMOOTH SCROLL + POP TARGET) ---
+        document.querySelectorAll('.nav-btn').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault(); // Matikan lompatan instan bawaan HTML
+                
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if(targetElement) {
+                    // 1. Gulir ke bawah secara halus
+                    const navHeight = 80; // Jarak dari navbar
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // 2. Beri efek berkedip/membal pada kotak yang dituju
+                    targetElement.classList.remove('pop-highlight');
+                    void targetElement.offsetWidth; // Trik ajaib untuk me-reset animasi
+                    targetElement.classList.add('pop-highlight');
+                }
+            });
+        });
     </script>
 </body>
 </html>
