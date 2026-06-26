@@ -19,7 +19,6 @@
             --accent-pink: #ffe8ef;
             --text-dark: #f290b3;
             
-            /* Modern iOS Diffuse Shadows */
             --app-shadow: 0 12px 35px rgba(239, 122, 164, 0.12);
             --widget-shadow: 0 8px 22px rgba(110, 175, 240, 0.15);
         }
@@ -38,7 +37,7 @@
         h1, h2, h3, h4 { font-family: 'Quicksand', sans-serif; letter-spacing: -0.5px; }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
 
-        /* ================= SPLASH SCREEN (LOADING) ================= */
+        /* ================= SPLASH SCREEN ================= */
         #splash {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: var(--bg-white); z-index: 9999;
@@ -93,26 +92,13 @@
         }
         .col-2 { grid-column: span 2; }
 
-        /* ================= BULLETPROOF PURE CSS SPRING ANIMATION ================= */
+        /* ================= WIDGET COMPONENT & ANIMATION ================= */
         .widget {
-            background: var(--bg-white);
-            border-radius: 28px;
-            padding: 22px; 
-            position: relative;
-            box-shadow: var(--app-shadow);
-            overflow: hidden;
-            
-            /* State awal sebelum loading selesai */
-            opacity: 0;
-            transform: scale(0.85) translateY(25px);
+            background: var(--bg-white); border-radius: 28px; padding: 22px; 
+            position: relative; box-shadow: var(--app-shadow); overflow: hidden;
+            opacity: 0; transform: scale(0.85) translateY(25px);
         }
-
-        /* Memicu animasi setelah kelas .app-loaded aktif */
-        .app-loaded .widget {
-            animation: spring-render 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        /* Jeda berurutan otomatis (Stagger) pakai CSS murni */
+        .app-loaded .widget { animation: spring-render 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         .app-loaded .widget:nth-child(1) { animation-delay: 0.05s; }
         .app-loaded .widget:nth-child(2) { animation-delay: 0.12s; }
         .app-loaded .widget:nth-child(3) { animation-delay: 0.18s; }
@@ -122,12 +108,7 @@
         .app-loaded .widget:nth-child(7) { animation-delay: 0.42s; }
         .app-loaded .widget:nth-child(8) { animation-delay: 0.48s; }
 
-        @keyframes spring-render {
-            0% { opacity: 0; transform: scale(0.85) translateY(25px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .widget:active { transform: scale(0.98); } 
+        @keyframes spring-render { 0% { opacity: 0; transform: scale(0.85) translateY(25px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
         /* Color Blocking */
         .w-blue { background: var(--accent-blue); color: var(--bg-white); box-shadow: var(--widget-shadow); }
@@ -135,8 +116,6 @@
         
         .widget-title { font-size: 20px; font-weight: 900; margin-bottom: 3px; z-index: 2; position: relative;}
         .widget-subtitle { font-size: 12px; font-weight: 600; opacity: 0.85; margin-bottom: 14px; z-index: 2; position: relative;}
-
-        /* Decorative Vector Shapes */
         .bg-shape { position: absolute; border-radius: 50%; opacity: 0.12; background: var(--bg-white); pointer-events: none; }
         .w-blue .bg-shape { width: 110px; height: 110px; top: -15px; right: -15px; }
         .w-pink .bg-shape { width: 130px; height: 130px; bottom: -35px; right: -15px; }
@@ -146,12 +125,10 @@
         .header-date { font-size: 12px; font-weight: 700; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
         .header-title { font-size: 34px; color: var(--bold-pink); font-weight: 900; line-height: 1.1; }
 
-        /* Mood Tracker Grid */
         .mood-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .mood-btn { aspect-ratio: 1; border-radius: 18px; background: var(--light-pink); display: flex; justify-content: center; align-items: center; font-size: 22px; cursor: pointer; transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .mood-btn { aspect-ratio: 1; border-radius: 18px; background: var(--light-pink); display: flex; justify-content: center; align-items: center; font-size: 22px; cursor: pointer; transition: 0.2s; }
         .mood-btn.active { background: var(--accent-blue); transform: scale(1.08) translateY(-3px); box-shadow: var(--widget-shadow); color: white; }
 
-        /* Ring Progress */
         .energy-flex { display: flex; align-items: center; gap: 12px; }
         .ring-container { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
         .ring-container svg { width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -159,7 +136,6 @@
         .ring-fill { fill: none; stroke: var(--bg-white); stroke-width: 8; stroke-dasharray: 251; stroke-dashoffset: 62; stroke-linecap: round; }
         .ring-text { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; font-weight: 900; font-family: 'Quicksand'; font-size: 15px; }
 
-        /* Apple Music Style Player */
         .music-flex { display: flex; align-items: center; gap: 14px; background: var(--light-pink); padding: 10px; border-radius: 20px;}
         .art { width: 55px; height: 55px; background: var(--bg-white); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 26px; box-shadow: 0 4px 10px rgba(239, 122, 164, 0.1); animation: spin 8s linear infinite;}
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -167,58 +143,87 @@
         .music-info p { font-size: 11px; color: var(--soft-pink); font-weight: 600; margin-bottom: 5px;}
         .play-btn { background: var(--accent-blue); color: var(--bg-white); padding: 5px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; text-decoration: none; display: inline-block;}
 
-        /* Concept/Quote Box */
         .quote-box { background: rgba(255,255,255,0.18); border-radius: 18px; padding: 14px; }
         .quote-text { font-size: 14px; line-height: 1.6; font-weight: 600; }
 
-        /* Swipeable Crew Carousel */
         .carousel-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 5px; scroll-snap-type: x mandatory; }
-        .crew-card { scroll-snap-align: start; min-width: 105px; background: var(--light-pink); border-radius: 22px; padding: 14px 10px; text-align: center; flex-shrink: 0; }
+        .crew-card { scroll-snap-align: start; min-width: 105px; background: var(--light-pink); border-radius: 22px; padding: 14px 10px; text-align: center; flex-shrink: 0; cursor: pointer; transition: 0.2s;}
+        .crew-card:active { transform: scale(0.95); }
         .crew-av { width: 55px; height: 55px; background: var(--bg-white); border-radius: 18px; margin: 0 auto 8px; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: var(--app-shadow);}
         .crew-card h4 { font-size: 14px; margin-bottom: 2px; }
         .crew-card p { font-size: 10px; background: var(--accent-blue); color: var(--bg-white); font-weight: 800; padding: 2px 6px; border-radius: 8px; display: inline-block;}
 
-        /* Rules */
         .dense-list { display: flex; flex-direction: column; gap: 10px; }
         .list-item { display: flex; align-items: center; gap: 10px; background: var(--light-pink); padding: 8px 12px; border-radius: 16px; }
         .list-icon { width: 26px; height: 26px; background: var(--bold-pink); color: var(--bg-white); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-family: 'Quicksand'; font-weight: 900; font-size: 13px; flex-shrink: 0;}
         .list-text { font-size: 12px; font-weight: 600; line-height: 1.4; }
 
-        /* Members Tags */
-        .tags-container { display: flex; flex-wrap: wrap; gap: 8px; }
-        .member-tag { background: var(--light-pink); color: var(--bold-pink); padding: 6px 12px; border-radius: 16px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-        .tag-dot { width: 8px; height: 8px; border-radius: 4px; background: var(--bold-pink); }
+        /* Coming Soon Design */
+        .coming-soon-box { background: var(--light-pink); border: 2px dashed var(--soft-pink); border-radius: 20px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;}
+        .cs-icon { font-size: 30px; animation: app-pulse 2s infinite; }
 
-        /* ================= RESPONSIVE ================= */
+        /* ================= MODAL POP-UP (PROFIL CREW) ================= */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 232, 239, 0.7); /* Transparan light-pink */
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 10000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: all 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-card {
+            background: var(--bg-white); border-radius: 35px; padding: 35px 25px 25px;
+            width: 85%; max-width: 320px; text-align: center;
+            box-shadow: 0 20px 50px rgba(239, 122, 164, 0.25);
+            transform: scale(0.8) translateY(30px); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative; border: 2px solid var(--light-pink);
+        }
+        .modal-overlay.active .modal-card { transform: scale(1) translateY(0); }
+        .close-btn {
+            position: absolute; top: 15px; right: 15px; width: 30px; height: 30px;
+            background: var(--light-pink); color: var(--bold-pink); border-radius: 15px;
+            display: flex; justify-content: center; align-items: center; font-weight: 900;
+            cursor: pointer; border: none; font-family: 'Quicksand'; transition: 0.2s;
+        }
+        .close-btn:active { transform: scale(0.8); }
+        .modal-av { width: 80px; height: 80px; background: var(--bg-white); border: 3px solid var(--light-pink); border-radius: 30px; margin: 0 auto 15px; display: flex; justify-content: center; align-items: center; font-size: 40px; box-shadow: var(--widget-shadow); }
+        .modal-name { font-family: 'Quicksand'; font-size: 24px; font-weight: 900; color: var(--bold-pink); margin-bottom: 5px; }
+        .modal-role { font-size: 12px; font-weight: 800; background: var(--accent-blue); color: var(--bg-white); padding: 5px 12px; border-radius: 12px; display: inline-block; margin-bottom: 15px; }
+        .modal-desc { font-size: 13px; line-height: 1.6; font-weight: 600; color: var(--soft-pink); }
+
         @media (max-width: 550px) {
             #app-wrapper { grid-template-columns: 1fr; }
             .col-2 { grid-column: span 1; }
-            .music-info h4 { max-width: 190px; }
         }
     </style>
 </head>
 <body>
 
+    <div class="modal-overlay" id="crew-modal" onclick="closeModal(event)">
+        <div class="modal-card">
+            <button class="close-btn" onclick="closeModal(event, true)">✕</button>
+            <div class="modal-av" id="modal-icon">📸</div>
+            <div class="modal-name" id="modal-name">Nama</div>
+            <div class="modal-role" id="modal-role">Role</div>
+            <div class="modal-desc" id="modal-desc">Deskripsi lengkap karakter akan muncul di sini.</div>
+        </div>
+    </div>
+
     <div id="splash">
         <div class="splash-logo">✨</div>
         <div class="splash-text">Brewing magic...</div>
-        <div class="splash-bar">
-            <div class="splash-progress"></div>
-        </div>
+        <div class="splash-bar"><div class="splash-progress"></div></div>
     </div>
 
     <nav>
         <a href="https://adole-quiz.vercel.app" class="nav-item" target="_blank">
-            <span class="nav-icon">🎮</span>
-            <span>Quiz</span>
+            <span class="nav-icon">🎮</span><span>Quiz</span>
         </a>
         <a href="#concept" class="nav-item">
-            <span class="nav-icon">📖</span>
-            <span class="lang" data-id="Konsep" data-en="Concept">Konsep</span>
+            <span class="nav-icon">📖</span><span class="lang" data-id="Konsep" data-en="Concept">Konsep</span>
         </a>
         <a href="#crew" class="nav-item">
-            <span class="nav-icon">👥</span>
-            <span>Crew</span>
+            <span class="nav-icon">👥</span><span>Crew</span>
         </a>
         <button id="lang-toggle" class="lang-btn" onclick="toggleLanguage()">EN</button>
     </nav>
@@ -285,13 +290,13 @@
 
         <div class="widget col-2" id="crew">
             <h2 class="widget-title">The Love-Crew 📸</h2>
-            <p class="widget-subtitle lang" data-id="Geser kesamping ➔" data-en="Swipe horizontally ➔">Geser kesamping ➔</p>
+            <p class="widget-subtitle lang" data-id="Tap kartu untuk detail profil ➔" data-en="Tap card for profile details ➔">Tap kartu untuk detail profil ➔</p>
             
             <div class="carousel-container">
-                <div class="crew-card"><div class="crew-av">📸</div><h4>Adler</h4><p>Overthinker</p></div>
-                <div class="crew-card"><div class="crew-av">📼</div><h4>Emma</h4><p>Catalyst</p></div>
-                <div class="crew-card"><div class="crew-av">🍕</div><h4>Leo</h4><p>Critic</p></div>
-                <div class="crew-card"><div class="crew-av">📱</div><h4>Mia</h4><p>Aesthetic Dir.</p></div>
+                <div class="crew-card" onclick="openModal('Adler')"><div class="crew-av">📸</div><h4>Adler</h4><p>Overthinker</p></div>
+                <div class="crew-card" onclick="openModal('Emma')"><div class="crew-av">📼</div><h4>Emma</h4><p>Catalyst</p></div>
+                <div class="crew-card" onclick="openModal('Leo')"><div class="crew-av">🍕</div><h4>Leo</h4><p>Critic</p></div>
+                <div class="crew-card" onclick="openModal('Mia')"><div class="crew-av">📱</div><h4>Mia</h4><p>Aesthetic Dir.</p></div>
             </div>
         </div>
 
@@ -303,38 +308,37 @@
                 <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Saling menghargai waktu dan energi." data-en="Respect each other's time and energy.">Saling menghargai waktu dan energi.</div></div>
                 <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="Tidak ada drama yang tidak perlu." data-en="No unnecessary drama.">Tidak ada drama yang tidak perlu.</div></div>
                 <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Bawa ide gila, no ghosting." data-en="Bring crazy ideas, no ghosting.">Bawa ide gila, no ghosting.</div></div>
-            </div>
+                </div>
         </div>
 
         <div class="widget col-2">
             <h2 class="widget-title">Damsels & Lads 💖</h2>
             <p class="widget-subtitle lang" data-id="Keluarga Besar" data-en="Extended Family">Keluarga Besar</p>
-            <div class="tags-container" id="members-list">
-                </div>
+            
+            <div class="coming-soon-box">
+                <div class="cs-icon">💌</div>
+                <h4 style="font-size: 16px;">Coming Soon</h4>
+                <p style="font-size: 12px; font-weight: 600;" class="lang" data-id="Sedang menyiapkan kursi untuk kalian!" data-en="Setting up the seats for you all!">Sedang menyiapkan kursi untuk kalian!</p>
+            </div>
         </div>
 
     </div>
 
     <script>
-        // 1. Amankan Loading & Trigger Animasi CSS (.app-loaded)
+        // 1. Loading & Animasi
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash');
                 if(splash) splash.classList.add('splash-hide');
-                
-                // Tambahkan class di body untuk memicu ringkasnya animasi CSS murni
                 document.body.classList.add('app-loaded');
             }, 2000); 
         });
 
-        // 2. Set Tanggal Cetak Otomatis
+        // 2. Tanggal
         const dateOptions = { weekday: 'long', day: 'numeric', month: 'short' };
-        const dateElement = document.getElementById('date-display');
-        if(dateElement) {
-            dateElement.innerText = new Date().toLocaleDateString('en-US', dateOptions).toUpperCase();
-        }
+        document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', dateOptions).toUpperCase();
 
-        // 3. Sistem Alih Bahasa (Bilingual)
+        // 3. Bilingual
         let isEnglish = false;
         function toggleLanguage() {
             isEnglish = !isEnglish;
@@ -344,23 +348,58 @@
             });
         }
 
-        // 4. Sistem Klik Mood Tracker
+        // 4. Mood Tracker
         function setMood(element) {
             document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
-            
             element.style.transform = 'scale(0.85)';
             setTimeout(() => { element.style.transform = ''; }, 100);
         }
 
-        // 5. Auto-Generate 46 Kapsul Nama Member
-        const membersList = document.getElementById('members-list');
-        if(membersList) {
-            for(let i = 1; i <= 46; i++) {
-                const tag = document.createElement('div');
-                tag.className = 'member-tag';
-                tag.innerHTML = `<div class="tag-dot"></div> Member ${i}`;
-                membersList.appendChild(tag);
+        // 5. DATA & LOGIKA MODAL POP-UP CREW
+        const crewData = {
+            'Adler': {
+                icon: '📸',
+                role: 'The Overthinker',
+                descID: 'Selalu punya rencana cadangan dari A sampai Z. Dia yang paling sering mikirin hal-hal kecil biar semuanya berjalan lancar.',
+                descEN: 'Always has a backup plan from A to Z. He thinks about the little things so everything runs smoothly.'
+            },
+            'Emma': {
+                icon: '📼',
+                role: 'The Catalyst',
+                descID: 'Spontan, penuh energi, dan selalu bawa kamera analog ke mana-mana buat nangkep momen random yang estetik.',
+                descEN: 'Spontaneous, energetic, and always brings an analog camera everywhere to capture random aesthetic moments.'
+            },
+            'Leo': {
+                icon: '🍕',
+                role: 'The Critic',
+                descID: 'Kritikus junk food paling handal di kota. Kalau butuh rekomendasi tempat makan enak tapi murah, dia orangnya.',
+                descEN: 'The most reliable junk food critic in town. If you need a good but cheap food recommendation, he is the guy.'
+            },
+            'Mia': {
+                icon: '📱',
+                role: 'Aesthetic Dir.',
+                descID: 'Kurator utama yang memastikan foto dan hasil desain semuanya punya kualitas yang memanjakan mata.',
+                descEN: 'Head curator ensuring all photos and design outputs have an eye-pleasing quality.'
+            }
+        };
+
+        function openModal(name) {
+            const data = crewData[name];
+            document.getElementById('modal-icon').innerText = data.icon;
+            document.getElementById('modal-name').innerText = name;
+            document.getElementById('modal-role').innerText = data.role;
+            
+            // Ganti deskripsi sesuai bahasa yang lagi aktif
+            document.getElementById('modal-desc').innerText = isEnglish ? data.descEN : data.descID;
+            
+            document.getElementById('crew-modal').classList.add('active');
+        }
+
+        function closeModal(event, forceClose = false) {
+            // Tutup pop-up cuma kalau yang diklik adalah background blur-nya ATAU tombol X
+            if (forceClose || event.target.id === 'crew-modal') {
+                document.getElementById('crew-modal').classList.remove('active');
             }
         }
     </script>
