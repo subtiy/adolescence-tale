@@ -6,35 +6,48 @@
     <title>The Love Crew App</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Quicksand:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Kita pakai Inter hanya sebagai fallback, prioritas utama adalah font bawaan Apple (SF Pro) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* ================= STRICT PALETTE ================= */
+        /* ================= STRICT PALETTE & VARIABLES ================= */
         :root {
             --bg-white: #ffffff;
             --light-pink: #ffe8ef;
             --soft-pink: #f290b3;
             --bold-pink: #ef7aa4;
             --accent-blue: #6eaff0;
-            --accent-pink: #ffe8ef;
             --text-dark: #f290b3;
+            
+            /* Apple-Style Font Stack */
+            --font-apple: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", sans-serif;
             
             --app-shadow: 0 12px 35px rgba(239, 122, 164, 0.12);
             --widget-shadow: 0 8px 22px rgba(110, 175, 240, 0.15);
+            --hover-shadow: 0 20px 40px rgba(239, 122, 164, 0.25);
         }
 
         /* ================= RESET & BASE ================= */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--light-pink);
+            font-family: var(--font-apple);
             color: var(--bold-pink);
             overflow-x: hidden;
             scroll-behavior: smooth;
+            
+            /* BACKGROUND: Mesh Gradient + Subtle Polka Dots */
+            background-color: var(--light-pink);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.9) 0%, transparent 45%),
+                radial-gradient(circle at 100% 100%, rgba(110, 175, 240, 0.15) 0%, transparent 50%),
+                radial-gradient(rgba(242, 144, 179, 0.25) 1.5px, transparent 1.5px);
+            background-size: 100% 100%, 100% 100%, 20px 20px;
+            background-attachment: fixed;
         }
 
-        h1, h2, h3, h4 { font-family: 'Quicksand', sans-serif; letter-spacing: -0.5px; }
+        /* Apple Headings Style (Tight letter-spacing, heavy weight) */
+        h1, h2, h3, h4 { font-family: var(--font-apple); letter-spacing: -0.8px; }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
 
         /* ================= SPLASH SCREEN ================= */
@@ -51,7 +64,7 @@
             animation: app-pulse 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
             box-shadow: var(--widget-shadow); margin-bottom: 20px;
         }
-        .splash-text { font-family: 'Quicksand'; font-weight: 800; font-size: 16px; color: var(--bold-pink); letter-spacing: 1px; margin-bottom: 15px;}
+        .splash-text { font-weight: 800; font-size: 18px; color: var(--bold-pink); letter-spacing: -0.5px; margin-bottom: 15px;}
         .splash-bar { width: 130px; height: 6px; background: var(--light-pink); border-radius: 10px; overflow: hidden; }
         .splash-progress { width: 0%; height: 100%; background: var(--bold-pink); animation: load-progress 1.8s ease-out forwards; }
         
@@ -64,8 +77,8 @@
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             width: 92%; max-width: 440px; padding: 8px;
             display: flex; justify-content: space-around; align-items: center;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border-radius: 35px; z-index: 1000;
             box-shadow: 0 12px 35px rgba(239, 122, 164, 0.2);
             border: 1.5px solid rgba(255, 255, 255, 0.6);
@@ -78,26 +91,30 @@
         .nav-icon { font-size: 18px; transition: 0.2s; }
         .nav-item:hover { color: var(--accent-blue); background: var(--light-pink); }
         
-        .lang-btn { background: var(--accent-blue); color: var(--bg-white); border-radius: 20px; padding: 8px 14px; font-family: 'Quicksand'; font-weight: 800; font-size: 12px; border: none; cursor: pointer; box-shadow: var(--widget-shadow);}
+        .lang-btn { background: var(--accent-blue); color: var(--bg-white); border-radius: 20px; padding: 8px 14px; font-weight: 800; font-size: 12px; border: none; cursor: pointer; box-shadow: var(--widget-shadow); transition: 0.2s;}
         .lang-btn:active { transform: scale(0.9); }
 
         /* ================= HIGH DENSITY APP LAYOUT ================= */
         #app-wrapper {
-            max-width: 680px; 
+            max-width: 760px; /* Sedikit diperlebar agar font besar Apple muat dengan estetik di desktop */
             margin: 0 auto;
-            padding: 30px 16px 110px; 
+            padding: 40px 20px 110px; 
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 14px; 
+            gap: 16px; 
         }
         .col-2 { grid-column: span 2; }
 
-        /* ================= WIDGET COMPONENT & ANIMATION ================= */
+        /* ================= WIDGET COMPONENT & HOVER ANIMATION ================= */
         .widget {
-            background: var(--bg-white); border-radius: 28px; padding: 22px; 
+            background: var(--bg-white); border-radius: 32px; padding: 26px; 
             position: relative; box-shadow: var(--app-shadow); overflow: hidden;
             opacity: 0; transform: scale(0.85) translateY(25px);
+            /* Smooth transition untuk hover tilt */
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
         }
+
+        /* Animasi Muncul Awal */
         .app-loaded .widget { animation: spring-render 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         .app-loaded .widget:nth-child(1) { animation-delay: 0.05s; }
         .app-loaded .widget:nth-child(2) { animation-delay: 0.12s; }
@@ -110,63 +127,85 @@
 
         @keyframes spring-render { 0% { opacity: 0; transform: scale(0.85) translateY(25px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
+        /* Smooth Tilt Hover Animasi (Selang-seling Miringnya) */
+        .app-loaded .widget:nth-child(odd):hover {
+            transform: scale(1.03) translateY(-6px) rotate(-1.5deg) !important;
+            box-shadow: var(--hover-shadow);
+            z-index: 10;
+        }
+        .app-loaded .widget:nth-child(even):hover {
+            transform: scale(1.03) translateY(-6px) rotate(1.5deg) !important;
+            box-shadow: var(--hover-shadow);
+            z-index: 10;
+        }
+        .app-loaded .widget:active { transform: scale(0.96) rotate(0deg) !important; box-shadow: var(--app-shadow); } 
+
         /* Color Blocking */
         .w-blue { background: var(--accent-blue); color: var(--bg-white); box-shadow: var(--widget-shadow); }
         .w-pink { background: var(--bold-pink); color: var(--bg-white); }
         
-        .widget-title { font-size: 20px; font-weight: 900; margin-bottom: 3px; z-index: 2; position: relative;}
-        .widget-subtitle { font-size: 12px; font-weight: 600; opacity: 0.85; margin-bottom: 14px; z-index: 2; position: relative;}
+        /* Font Title Apple Size - Desktop Default */
+        .widget-title { font-size: 28px; font-weight: 900; margin-bottom: 4px; z-index: 2; position: relative; letter-spacing: -1px; line-height: 1.1;}
+        .widget-subtitle { font-size: 14px; font-weight: 600; opacity: 0.85; margin-bottom: 18px; z-index: 2; position: relative; letter-spacing: -0.3px;}
+        
         .bg-shape { position: absolute; border-radius: 50%; opacity: 0.12; background: var(--bg-white); pointer-events: none; }
-        .w-blue .bg-shape { width: 110px; height: 110px; top: -15px; right: -15px; }
-        .w-pink .bg-shape { width: 130px; height: 130px; bottom: -35px; right: -15px; }
+        .w-blue .bg-shape { width: 130px; height: 130px; top: -15px; right: -15px; }
+        .w-pink .bg-shape { width: 150px; height: 150px; bottom: -35px; right: -15px; }
 
         /* ================= WIDGETS INTERIOR ================= */
-        .header-widget { background: transparent; box-shadow: none; padding: 8px 4px; }
-        .header-date { font-size: 12px; font-weight: 700; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
-        .header-title { font-size: 34px; color: var(--bold-pink); font-weight: 900; line-height: 1.1; }
+        .header-widget { background: transparent; box-shadow: none; padding: 10px 4px; }
+        .header-widget:hover { transform: none !important; box-shadow: none; } /* Matikan tilt di header */
+        .header-date { font-size: 13px; font-weight: 800; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+        .header-title { font-size: 54px; color: var(--bold-pink); font-weight: 900; line-height: 1; letter-spacing: -2px; } /* Ukuran Super Besar ala Apple */
 
-        .mood-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .mood-btn { aspect-ratio: 1; border-radius: 18px; background: var(--light-pink); display: flex; justify-content: center; align-items: center; font-size: 22px; cursor: pointer; transition: 0.2s; }
-        .mood-btn.active { background: var(--accent-blue); transform: scale(1.08) translateY(-3px); box-shadow: var(--widget-shadow); color: white; }
+        /* Mood Tracker Grid */
+        .mood-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .mood-btn { aspect-ratio: 1; border-radius: 20px; background: var(--light-pink); display: flex; justify-content: center; align-items: center; font-size: 26px; cursor: pointer; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .mood-btn.active { background: var(--accent-blue); transform: scale(1.1) translateY(-4px); box-shadow: var(--widget-shadow); color: white; }
 
-        .energy-flex { display: flex; align-items: center; gap: 12px; }
-        .ring-container { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+        /* Ring Progress */
+        .energy-flex { display: flex; align-items: center; gap: 16px; }
+        .ring-container { position: relative; width: 65px; height: 65px; flex-shrink: 0; }
         .ring-container svg { width: 100%; height: 100%; transform: rotate(-90deg); }
         .ring-bg { fill: none; stroke: rgba(255,255,255,0.25); stroke-width: 8; }
         .ring-fill { fill: none; stroke: var(--bg-white); stroke-width: 8; stroke-dasharray: 251; stroke-dashoffset: 62; stroke-linecap: round; }
-        .ring-text { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; font-weight: 900; font-family: 'Quicksand'; font-size: 15px; }
+        .ring-text { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; font-weight: 800; font-size: 16px; letter-spacing: -0.5px; }
 
-        .music-flex { display: flex; align-items: center; gap: 14px; background: var(--light-pink); padding: 10px; border-radius: 20px;}
-        .art { width: 55px; height: 55px; background: var(--bg-white); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 26px; box-shadow: 0 4px 10px rgba(239, 122, 164, 0.1); animation: spin 8s linear infinite;}
+        /* Apple Music Style Player */
+        .music-flex { display: flex; align-items: center; gap: 16px; background: var(--light-pink); padding: 12px; border-radius: 24px;}
+        .art { width: 65px; height: 65px; background: var(--bg-white); border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 10px rgba(239, 122, 164, 0.1); animation: spin 8s linear infinite;}
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        .music-info h4 { font-size: 15px; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px;}
-        .music-info p { font-size: 11px; color: var(--soft-pink); font-weight: 600; margin-bottom: 5px;}
-        .play-btn { background: var(--accent-blue); color: var(--bg-white); padding: 5px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; text-decoration: none; display: inline-block;}
+        .music-info h4 { font-size: 18px; font-weight: 800; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; letter-spacing: -0.5px;}
+        .music-info p { font-size: 13px; color: var(--soft-pink); font-weight: 600; margin-bottom: 6px;}
+        .play-btn { background: var(--accent-blue); color: var(--bg-white); padding: 6px 14px; border-radius: 14px; font-size: 12px; font-weight: 800; text-decoration: none; display: inline-block;}
 
-        .quote-box { background: rgba(255,255,255,0.18); border-radius: 18px; padding: 14px; }
-        .quote-text { font-size: 14px; line-height: 1.6; font-weight: 600; }
+        /* Concept/Quote Box */
+        .quote-box { background: rgba(255,255,255,0.18); border-radius: 22px; padding: 18px; }
+        .quote-text { font-size: 16px; line-height: 1.6; font-weight: 600; letter-spacing: -0.3px;}
 
-        .carousel-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 5px; scroll-snap-type: x mandatory; }
-        .crew-card { scroll-snap-align: start; min-width: 105px; background: var(--light-pink); border-radius: 22px; padding: 14px 10px; text-align: center; flex-shrink: 0; cursor: pointer; transition: 0.2s;}
+        /* Swipeable Crew Carousel */
+        .carousel-container { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; }
+        .crew-card { scroll-snap-align: start; min-width: 110px; background: var(--light-pink); border-radius: 24px; padding: 18px 10px; text-align: center; flex-shrink: 0; cursor: pointer; transition: 0.2s;}
         .crew-card:active { transform: scale(0.95); }
-        .crew-av { width: 55px; height: 55px; background: var(--bg-white); border-radius: 18px; margin: 0 auto 8px; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: var(--app-shadow);}
-        .crew-card h4 { font-size: 14px; margin-bottom: 2px; }
-        .crew-card p { font-size: 10px; background: var(--accent-blue); color: var(--bg-white); font-weight: 800; padding: 2px 6px; border-radius: 8px; display: inline-block;}
+        .crew-av { width: 65px; height: 65px; background: var(--bg-white); border-radius: 20px; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: var(--app-shadow);}
+        .crew-card h4 { font-size: 16px; font-weight: 800; margin-bottom: 2px; letter-spacing: -0.5px;}
+        .crew-card p { font-size: 11px; background: var(--accent-blue); color: var(--bg-white); font-weight: 800; padding: 3px 8px; border-radius: 10px; display: inline-block;}
 
-        .dense-list { display: flex; flex-direction: column; gap: 10px; }
-        .list-item { display: flex; align-items: center; gap: 10px; background: var(--light-pink); padding: 8px 12px; border-radius: 16px; }
-        .list-icon { width: 26px; height: 26px; background: var(--bold-pink); color: var(--bg-white); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-family: 'Quicksand'; font-weight: 900; font-size: 13px; flex-shrink: 0;}
-        .list-text { font-size: 12px; font-weight: 600; line-height: 1.4; }
+        /* Rules */
+        .dense-list { display: flex; flex-direction: column; gap: 12px; }
+        .list-item { display: flex; align-items: center; gap: 12px; background: var(--light-pink); padding: 10px 14px; border-radius: 18px; }
+        .list-icon { width: 30px; height: 30px; background: var(--bold-pink); color: var(--bg-white); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 14px; flex-shrink: 0;}
+        .list-text { font-size: 14px; font-weight: 600; line-height: 1.4; letter-spacing: -0.3px;}
 
         /* Coming Soon Design */
-        .coming-soon-box { background: var(--light-pink); border: 2px dashed var(--soft-pink); border-radius: 20px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;}
-        .cs-icon { font-size: 30px; animation: app-pulse 2s infinite; }
+        .coming-soon-box { background: var(--light-pink); border: 2px dashed var(--soft-pink); border-radius: 24px; padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;}
+        .cs-icon { font-size: 34px; animation: app-pulse 2s infinite; }
 
         /* ================= MODAL POP-UP (PROFIL CREW) ================= */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(255, 232, 239, 0.7); /* Transparan light-pink */
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            background: rgba(255, 232, 239, 0.7); 
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             z-index: 10000; display: flex; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none; transition: all 0.3s ease;
         }
@@ -183,22 +222,31 @@
             position: absolute; top: 15px; right: 15px; width: 30px; height: 30px;
             background: var(--light-pink); color: var(--bold-pink); border-radius: 15px;
             display: flex; justify-content: center; align-items: center; font-weight: 900;
-            cursor: pointer; border: none; font-family: 'Quicksand'; transition: 0.2s;
+            cursor: pointer; border: none; transition: 0.2s;
         }
         .close-btn:active { transform: scale(0.8); }
         .modal-av { width: 80px; height: 80px; background: var(--bg-white); border: 3px solid var(--light-pink); border-radius: 30px; margin: 0 auto 15px; display: flex; justify-content: center; align-items: center; font-size: 40px; box-shadow: var(--widget-shadow); }
-        .modal-name { font-family: 'Quicksand'; font-size: 24px; font-weight: 900; color: var(--bold-pink); margin-bottom: 5px; }
+        .modal-name { font-size: 26px; font-weight: 900; color: var(--bold-pink); margin-bottom: 5px; letter-spacing: -1px;}
         .modal-role { font-size: 12px; font-weight: 800; background: var(--accent-blue); color: var(--bg-white); padding: 5px 12px; border-radius: 12px; display: inline-block; margin-bottom: 15px; }
-        .modal-desc { font-size: 13px; line-height: 1.6; font-weight: 600; color: var(--soft-pink); }
+        .modal-desc { font-size: 14px; line-height: 1.6; font-weight: 600; color: var(--soft-pink); }
 
-        @media (max-width: 550px) {
-            #app-wrapper { grid-template-columns: 1fr; }
+        /* ================= RESPONSIVE PENGECILAN FONT DI HP ================= */
+        @media (max-width: 600px) {
+            #app-wrapper { grid-template-columns: 1fr; padding: 30px 16px 110px; }
             .col-2 { grid-column: span 1; }
+            
+            /* Penyesuaian Font di HP agar kembali normal/rapi */
+            .header-title { font-size: 38px; }
+            .widget-title { font-size: 22px; }
+            .widget { padding: 22px; }
+            
+            .music-info h4 { max-width: 190px; font-size: 16px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- MODAL POP-UP -->
     <div class="modal-overlay" id="crew-modal" onclick="closeModal(event)">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal(event, true)">✕</button>
@@ -209,12 +257,14 @@
         </div>
     </div>
 
+    <!-- SPLASH SCREEN -->
     <div id="splash">
         <div class="splash-logo">✨</div>
         <div class="splash-text">Brewing magic...</div>
         <div class="splash-bar"><div class="splash-progress"></div></div>
     </div>
 
+    <!-- BOTTOM APP DOCK -->
     <nav>
         <a href="https://adole-quiz.vercel.app" class="nav-item" target="_blank">
             <span class="nav-icon">🎮</span><span>Quiz</span>
@@ -228,13 +278,16 @@
         <button id="lang-toggle" class="lang-btn" onclick="toggleLanguage()">EN</button>
     </nav>
 
+    <!-- DASHBOARD APPLICATION WRAPPER -->
     <div id="app-wrapper">
         
+        <!-- HEADER -->
         <div class="widget header-widget col-2">
             <div class="header-date" id="date-display">LOADING DATE...</div>
             <div class="header-title lang" data-id="Halo, Bestie! ✨" data-en="Hello, Bestie! ✨">Halo, Bestie! ✨</div>
         </div>
 
+        <!-- MOOD TRACKER -->
         <div class="widget">
             <h2 class="widget-title lang" data-id="Vibe hari ini?" data-en="Your Vibe?">Vibe hari ini?</h2>
             <p class="widget-subtitle lang" data-id="Tap ikon moodmu" data-en="Tap your mood">Tap ikon moodmu</p>
@@ -246,6 +299,7 @@
             </div>
         </div>
 
+        <!-- ENERGY LEVEL -->
         <div class="widget w-blue">
             <div class="bg-shape"></div>
             <h2 class="widget-title">Energy ⚡</h2>
@@ -258,14 +312,15 @@
                     </svg>
                     <div class="ring-text">75%</div>
                 </div>
-                <div style="font-size: 12px; font-weight: 600; line-height: 1.4;">
+                <div style="font-size: 13px; font-weight: 600; line-height: 1.4;">
                     <span class="lang" data-id="Masih semangat buat bikin magis!" data-en="Still fired up to make magic!">Masih semangat buat bikin magis!</span>
                 </div>
             </div>
         </div>
 
-        <div class="widget col-2" style="padding: 18px;">
-            <h2 class="widget-title" style="margin-bottom: 10px; font-size: 16px;">Now Playing 🎵</h2>
+        <!-- MUSIC PLAYER -->
+        <div class="widget col-2" style="padding: 22px;">
+            <h2 class="widget-title" style="margin-bottom: 12px; font-size: 18px;">Now Playing 🎵</h2>
             <div class="music-flex">
                 <div class="art">💿</div>
                 <div class="music-info" style="flex-grow: 1;">
@@ -276,6 +331,7 @@
             </div>
         </div>
 
+        <!-- CONCEPT -->
         <div class="widget w-pink col-2" id="concept">
             <div class="bg-shape"></div>
             <h2 class="widget-title lang" data-id="Konsep Kami 🎬" data-en="The Concept 🎬">Konsep Kami 🎬</h2>
@@ -288,6 +344,7 @@
             </div>
         </div>
 
+        <!-- THE CREW -->
         <div class="widget col-2" id="crew">
             <h2 class="widget-title">The Love-Crew 📸</h2>
             <p class="widget-subtitle lang" data-id="Tap kartu untuk detail profil ➔" data-en="Tap card for profile details ➔">Tap kartu untuk detail profil ➔</p>
@@ -300,6 +357,7 @@
             </div>
         </div>
 
+        <!-- RULES -->
         <div class="widget col-2" id="rules">
             <h2 class="widget-title">The Rules 📌</h2>
             <p class="widget-subtitle lang" data-id="Aturan main kita" data-en="Our ground rules">Aturan main kita</p>
@@ -308,22 +366,24 @@
                 <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Saling menghargai waktu dan energi." data-en="Respect each other's time and energy.">Saling menghargai waktu dan energi.</div></div>
                 <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="Tidak ada drama yang tidak perlu." data-en="No unnecessary drama.">Tidak ada drama yang tidak perlu.</div></div>
                 <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Bawa ide gila, no ghosting." data-en="Bring crazy ideas, no ghosting.">Bawa ide gila, no ghosting.</div></div>
-                </div>
+            </div>
         </div>
 
+        <!-- DAMSELS & LADS (COMING SOON) -->
         <div class="widget col-2">
             <h2 class="widget-title">Damsels & Lads 💖</h2>
             <p class="widget-subtitle lang" data-id="Keluarga Besar" data-en="Extended Family">Keluarga Besar</p>
             
             <div class="coming-soon-box">
                 <div class="cs-icon">💌</div>
-                <h4 style="font-size: 16px;">Coming Soon</h4>
-                <p style="font-size: 12px; font-weight: 600;" class="lang" data-id="Sedang menyiapkan kursi untuk kalian!" data-en="Setting up the seats for you all!">Sedang menyiapkan kursi untuk kalian!</p>
+                <h4 style="font-size: 18px; font-weight: 800; letter-spacing: -0.5px;">Coming Soon</h4>
+                <p style="font-size: 13px; font-weight: 600;" class="lang" data-id="Sedang menyiapkan kursi untuk kalian!" data-en="Setting up the seats for you all!">Sedang menyiapkan kursi untuk kalian!</p>
             </div>
         </div>
 
     </div>
 
+    <!-- JAVASCRIPT -->
     <script>
         // 1. Loading & Animasi
         window.addEventListener('load', () => {
@@ -389,15 +449,12 @@
             document.getElementById('modal-icon').innerText = data.icon;
             document.getElementById('modal-name').innerText = name;
             document.getElementById('modal-role').innerText = data.role;
-            
-            // Ganti deskripsi sesuai bahasa yang lagi aktif
             document.getElementById('modal-desc').innerText = isEnglish ? data.descEN : data.descID;
             
             document.getElementById('crew-modal').classList.add('active');
         }
 
         function closeModal(event, forceClose = false) {
-            // Tutup pop-up cuma kalau yang diklik adalah background blur-nya ATAU tombol X
             if (forceClose || event.target.id === 'crew-modal') {
                 document.getElementById('crew-modal').classList.remove('active');
             }
