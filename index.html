@@ -348,15 +348,15 @@
 
         <!-- THE CREW -->
         <div class="widget col-2" id="crew">
-            <h2 class="widget-title">The Love-Crew 📸</h2>
-            <p class="widget-subtitle lang" data-id="Tap kartu untuk detail profil ➔" data-en="Tap card for profile details ➔">Tap kartu untuk detail profil ➔</p>
+            <h2 class="widget-title">the love-crew</h2>
+            <p class="widget-subtitle lang" data-id="tap kartu untuk detail profil" data-en="tap card for profile details">Tap kartu untuk detail profil ➔</p>
             
             <div class="carousel-container">
                 <!-- GANTI NAMA FILE GAMBAR DI BAWAH INI SESUAI FOTO MEREKA -->
-                <div class="crew-card" onclick="openModal('Adler')"><div class="crew-av"><img src="avatar-adler.png" alt="Adler" class="img-fit"></div><h4>Adler</h4><p>Overthinker</p></div>
-                <div class="crew-card" onclick="openModal('Emma')"><div class="crew-av"><img src="avatar-emma.png" alt="Emma" class="img-fit"></div><h4>Emma</h4><p>Catalyst</p></div>
-                <div class="crew-card" onclick="openModal('Leo')"><div class="crew-av"><img src="avatar-leo.png" alt="Leo" class="img-fit"></div><h4>Leo</h4><p>Critic</p></div>
-                <div class="crew-card" onclick="openModal('Mia')"><div class="crew-av"><img src="avatar-mia.png" alt="Mia" class="img-fit"></div><h4>Mia</h4><p>Aesthetic Dir.</p></div>
+                <div class="crew-card" onclick="openModal('Lorien')"><div class="crew-av"><img src="kepala_lorien.png" alt="Lorien" class="img-fit"></div><h4>Lorien</h4><p>The Cat</p></div>
+                <div class="crew-card" onclick="openModal('Ocean')"><div class="crew-av"><img src="kepala_ocean.png" alt="Ocean" class="img-fit"></div><h4>Ocean</h4><p>The Rooster</p></div>
+                <div class="crew-card" onclick="openModal('Violet')"><div class="crew-av"><img src="kepala_violet.png" alt="Violet" class="img-fit"></div><h4>Violet</h4><p>The Koala</p></div>
+                <div class="crew-card" onclick="openModal('Ezra')"><div class="crew-av"><img src="kepala_ezra.png" alt="Ezra" class="img-fit"></div><h4>Ezra</h4><p>The Seal</p></div>
             </div>
         </div>
 
@@ -425,29 +425,29 @@
         // 5. DATA GAMBAR & LOGIKA MODAL POP-UP CREW
         // PASTIKAN NAMA FILE DI BAWAH INI SAMA DENGAN YANG KAMU UPLOAD
         const crewData = {
-            'Adler': {
-                imageSrc: 'avatar-adler.png',
-                role: 'The Overthinker',
-                descID: 'Selalu punya rencana cadangan dari A sampai Z. Dia yang paling sering mikirin hal-hal kecil biar semuanya berjalan lancar.',
-                descEN: 'Always has a backup plan from A to Z. He thinks about the little things so everything runs smoothly.'
+            'Lorien': {
+                imageSrc: 'kepala_lorien.png',
+                role: 'The Cat',
+                descID: 'Kadang manis, kadang menace yang bakal sengaja ngacangin orang buat ngetes seberapa peduli mereka sama dia.',
+                descEN: 'Half sweetheart, half menace who will ignore you for three hours just to see if you actually care enough to chase him.'
             },
-            'Emma': {
-                imageSrc: 'avatar-emma.png',
-                role: 'The Catalyst',
-                descID: 'Spontan, penuh energi, dan selalu bawa kamera analog ke mana-mana buat nangkep momen random yang estetik.',
-                descEN: 'Spontaneous, energetic, and always brings an analog camera everywhere to capture random aesthetic moments.'
+            'Ocean': {
+                imageSrc: 'kepala_ocean.png',
+                role: 'The Rooster',
+                descID: 'Kukuruyuk! Paling pertama semangat nyambut matahari terbit, dan paling cepat milih cinta, walaupun tahu nggak semua luka bisa disembuhin sama cinta. /Bertelor/',
+                descEN: 'Kukuruyuk! First one to welcome the sunrise, first one to choose love, even knowing some things can only be healed from within.'
             },
-            'Leo': {
-                imageSrc: 'avatar-leo.png',
-                role: 'The Critic',
+            'Violet': {
+                imageSrc: 'kepala_violet.png',
+                role: 'The Koala',
                 descID: 'Kritikus junk food paling handal di kota. Kalau butuh rekomendasi tempat makan enak tapi murah, dia orangnya.',
-                descEN: 'The most reliable junk food critic in town. If you need a good but cheap food recommendation, he is the guy.'
+                descEN: 'All she ever wanted was to be loved. The koala in her held on a little too tightly. She believed that if she held on tighter, they&apos;d stay. So she begged to be seen, still clinging to hope that one day, she&apos;d finally be enough.'
             },
-            'Mia': {
-                imageSrc: 'avatar-mia.png',
+            'Ezra': {
+                imageSrc: 'kepala_ezra.png',
                 role: 'Aesthetic Dir.',
-                descID: 'Kurator utama yang memastikan foto dan hasil desain semuanya punya kualitas yang memanjakan mata.',
-                descEN: 'Head curator ensuring all photos and design outputs have an eye-pleasing quality.'
+                descID: 'Lorem ipsum Zedekiah jamet.',
+                descEN: 'Lorem ipsum Zedekiah jamet.'
             }
         };
 
