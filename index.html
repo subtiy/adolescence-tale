@@ -245,6 +245,22 @@
             transform: scale(0.96);
         }
 
+        /* Additional Layout untuk Rules Tab */
+        .rules-content { display: none; animation: fadeIn 0.4s ease forwards; }
+        .rules-content.active { display: block; }
+        
+        /* Gaya khusus kotak catatan/note agar stand out */
+        .note-box {
+            background: rgba(239, 122, 164, 0.08);
+            border-left: 4px solid var(--bold-pink);
+            padding: 14px;
+            border-radius: 0 16px 16px 0;
+            margin-top: 14px;
+            font-size: 12px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
         /* Coming Soon Design */
         .coming-soon-box { background: var(--light-pink); border: 2px dashed var(--soft-pink); border-radius: 24px; padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;}
         .cs-icon { width: 50px; height: 50px; animation: app-pulse 2s infinite; }
@@ -336,22 +352,44 @@
 
     <!-- MODAL POP-UP (RULES) -->
     <div class="modal-overlay" id="rules-modal" onclick="closeRulesModal(event)">
-        <div class="modal-card" style="max-width: 350px;">
+        <div class="modal-card" style="max-width: 380px;">
             <button class="close-btn" onclick="closeRulesModal(event, true)">✕</button>
-            <div style="font-size: 40px; margin-bottom: 10px;"> </div>
-            <div class="modal-name" style="font-size: 24px;">who can apply?</div>
-            <div class="modal-desc" style="font-size: 13px;"> </div>
+            <div style="font-size: 36px; margin-bottom: 8px;">📌</div>
+            <div class="modal-name lang" data-id="Buku Panduan" data-en="Guidebook">Buku Panduan</div>
+            <div class="modal-desc lang" data-id="Informasi lengkap persyaratan & aturan" data-en="Full requirements & regulations detail">Informasi lengkap persyaratan & aturan</div>
             
-            <!-- Tempat kamu menaruh poin-poin yang buanyaaak -->
-            <div class="dense-list scrollable-list">
-                <!-- Tinggal copy-paste baris di bawah ini sebanyak rules yang kamu punya -->
-                <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Lahir di rentang tahun 2000-2009" data-en="Born between 2000–2009">Lahir di rentang tahun 2000-2009</div></div>
-                <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="Boleh dari kewarganegaraan mana saja" data-en="All nationalities are welcome">Boleh dari kewarganegaraan mana saja</div></div>
-                <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Pilihan muse yang masih aktif berkarir dan nggak lagi terseret kontroversi atau skandal besar" data-en="Currently active in their careers and not involved in any ongoing controversies or major issues">Pilihan muse yang masih aktif berkarir dan nggak lagi terseret kontroversi atau skandal besar</div></div>
-                <div class="list-item"><div class="list-text lang" data-id="Muse yang lagi hiatus (contoh: sedang istirahat karena masalah kesehatan, tolong hargai waktu pemulihan mereka dan jangan pakai wajah mereka dulu sampai mereka comeback) dihitung sebagai nonaktif.<br><br>Jadi, pastikan kamu riset dulu muse pilihanmu sebelum daftar, ya!" data-en="Muses who are on hiatus (e.g. taking a break due to health reasons, please respect their time to recover and avoid using their face until they return) are considered inactive.<br><br>So make sure to research your chosen muse before applying.">Muse yang lagi hiatus (contoh: sedang istirahat karena masalah kesehatan, tolong hargai waktu pemulihan mereka dan jangan pakai wajah mereka dulu sampai mereka comeback) dihitung sebagai nonaktif.<br><br>Jadi, pastikan kamu riset dulu muse pilihanmu sebelum daftar, ya!</div></div>
-                <div class="list-item"><div class="list-icon">5</div><div class="list-text lang" data-id="Lorem ipsum yah." data-en="Lorem ipsum yah.">Lorem ipsum yah.</div></div>
-                <div class="list-item"><div class="list-icon">6</div><div class="list-text lang" data-id="Lorem ipsum yah." data-en="Lorem ipsum yah.">Lorem ipsum yah.</div></div>
+            <div class="segmented-control" style="margin-top: 15px; margin-bottom: 10px;">
+                <button class="seg-btn active" id="btn-m-tab1" onclick="switchModalTab('tab1')">Apply Info</button>
+                <button class="seg-btn" id="btn-m-tab2" onclick="switchModalTab('tab2')">Full Rules</button>
             </div>
+
+            <div class="modal-rules-content active" id="content-m-tab1">
+                <div class="dense-list scrollable-list">
+                    <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Hanya individu yang memenuhi syarat yang boleh mendaftar keanggotaan." data-en="Only eligible individuals may apply for membership.">Hanya individu yang memenuhi syarat yang boleh mendaftar keanggotaan.</div></div>
+                    <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Lahir di rentang tahun 2000–2009." data-en="Born between 2000–2009.">Lahir di rentang tahun 2000–2009.</div></div>
+                    <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Boleh dari kewarganegaraan mana saja." data-en="All nationalities are welcome.">Boleh dari kewarganegaraan mana saja.</div></div>
+                    <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Pilihan muse yang masih aktif berkarir dan nggak lagi terseret kontroversi atau skandal besar." data-en="Currently active in their careers and not involved in any ongoing controversies or major issues.">Pilihan muse yang masih aktif berkarir dan nggak lagi terseret kontroversi atau skandal besar.</div></div>
+                    
+                    <div class="note-box lang" 
+                         data-id="⚠️ Muse yang lagi hiatus (contoh: sedang istirahat karena masalah kesehatan, tolong hargai waktu pemulihan mereka dan jangan pakai wajah mereka dulu sampai mereka comeback) dihitung sebagai nonaktif. Jadi, pastikan kamu riset dulu muse pilihanmu sebelum daftar, ya!" 
+                         data-en="⚠️ Muses who are on hiatus (e.g. taking a break due to health reasons, please respect their time to recover and avoid using their face until they return) are considered inactive. So make sure to research your chosen muse before applying.">
+                         ⚠️ Muse yang lagi hiatus (contoh: sedang istirahat karena masalah kesehatan, tolong hargai waktu pemulihan mereka dan jangan pakai wajah mereka dulu sampai mereka comeback) dihitung sebagai nonaktif. Jadi, pastikan kamu riset dulu muse pilihanmu sebelum daftar, ya!
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-rules-content" id="content-m-tab2">
+                <div class="dense-list scrollable-list">
+                    <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Kamu boleh ganti muse SEKALI aja setelah verifikasi, tepat sebelum kamu klaim slot kamu (sistem siapa cepat dia dapat)." data-en="You may change your muse ONCE after verification before claiming your slot.">Kamu boleh ganti muse SEKALI aja setelah verifikasi, tepat sebelum kamu klaim slot kamu (sistem siapa cepat dia dapat).</div></div>
+                    <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="ATAU, kamu boleh ganti karakter kalau karakter utama atau karakter cadanganmu (alt 1) ternyata unver di tengah jalan (hari kedua-keenam)." data-en="OR, you may change your character if your main character or alt 1 gets unverified.">ATAU, kamu boleh ganti karakter kalau karakter utama atau karakter cadanganmu (alt 1) ternyata unver di tengah jalan (hari kedua-keenam).</div></div>
+                    <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Dilarang keras membawa konten yang berbau SARA, NSFW (18+), dan politik." data-en="Content related to SARA, NSFW, and political issues is strictly prohibited.">Dilarang keras membawa konten yang berbau SARA, NSFW (18+), dan politik.</div></div>
+                    <div class="list-item"><div class="list-icon">4</div><div class="list-text lang" data-id="Dilarang CIC dan menyebar info pribadi. Tolong jaga kenyamanan bersama dengan nggak terlalu ngebahas urusan pribadi setiap individu." data-en="No CIC and doxxing, maintain everyone’s comfort by avoiding overly personal matter.">Dilarang CIC dan menyebar info pribadi. Tolong jaga kenyamanan bersama dengan nggak terlalu ngebahas urusan pribadi setiap individu.</div></div>
+                    <div class="list-item"><div class="list-icon">5</div><div class="list-text lang" data-id="Dilarang berinteraksi dengan pihak luar (outsider); interaksi hanya boleh dengan sesama member adole." data-en="No interaction with outsider, interact only with fellow adole members.">Dilarang berinteraksi dengan pihak luar (outsider); interaksi hanya boleh dengan sesama member adole.</div></div>
+                    <div class="list-item"><div class="list-icon">6</div><div class="list-text lang" data-id="Jangan spam." data-en="Do not spam.">Jangan spam.</div></div>
+                    <div class="list-item"><div class="list-icon">7</div><div class="list-text lang" data-id="Tanggung jawab dengan slot yang sudah kamu ambil, dan jangan tiba-tiba menghilang (ghosting) tanpa beri admin kabar lebih dulu." data-en="Be responsible for your slot and don’t disappear without prior notice.">Tanggung jawab dengan slot yang sudah kamu ambil, dan jangan tiba-tiba menghilang (ghosting) tanpa beri admin kabar lebih dulu.</div></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -534,20 +572,33 @@
 
         <!-- RULES -->
         <div class="widget col-2" id="rules">
-            <h2 class="widget-title">who can apply?</h2>
-            <p class="widget-subtitle lang" data-id="hanya yang memenuhi kriteria yang boleh mendaftar sebagai anggota." data-en="only eligible individuals may apply for membership">hanya yang memenuhi kriteria yang boleh mendaftar sebagai anggota.</p>
+            <h2 class="widget-title lang" data-id="Panduan & Aturan 📌" data-en="Guidelines & Rules 📌">Panduan & Aturan 📌</h2>
+            <p class="widget-subtitle lang" data-id="Ketentuan pendaftaran adole" data-en="Adole registration requirements">Ketentuan pendaftaran adole</p>
             
-            <div class="dense-list">
-                <!-- Tampilkan 3 poin aja sebagai teaser -->
-                <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Lahir di rentang tahun 2000-2009" data-en="Born between 2000–2009">Lahir di rentang tahun 2000-2009</div></div>
-                <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="Boleh dari kewarganegaraan mana saja" data-en="All nationalities are welcome">Boleh dari kewarganegaraan mana saja</div></div>
-                <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Pilihan muse yang masih aktif berkarir dan nggak lagi terseret kontroversi atau skandal besar" data-en="Currently active in their careers and not involved in any ongoing controversies or major issues">Pilihan muse yang masih aktif berkarir dan nggak lagi terseret kontroversi atau skandal besar</div></div>
-                
-                <!-- TOMBOL READ MORE -->
-                <button class="read-more-btn" onclick="openRulesModal()">
-                    <span class="lang" data-id="baca semuanya di sini ➔" data-en="read all rules ➔">baca semuanya di sini ➔</span>
-                </button>
+            <div class="segmented-control">
+                <button class="seg-btn active" id="btn-tab1" onclick="switchRulesTab('tab1')">Who Can Apply?</button>
+                <button class="seg-btn" id="btn-tab2" onclick="switchRulesTab('tab2')">Rules</button>
             </div>
+
+            <div class="rules-content active" id="content-tab1">
+                <div class="dense-list">
+                    <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Lahir di rentang tahun 2000–2009." data-en="Born between 2000–2009.">Lahir di rentang tahun 2000–2009.</div></div>
+                    <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Boleh dari kewarganegaraan mana saja." data-en="All nationalities are welcome.">Boleh dari kewarganegaraan mana saja.</div></div>
+                    <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Muse aktif berkarir & bebas kontroversi besar." data-en="Currently active in their careers and free of major controversies.">Muse aktif berkarir & bebas kontroversi besar.</div></div>
+                </div>
+            </div>
+
+            <div class="rules-content" id="content-tab2">
+                <div class="dense-list">
+                    <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Boleh ganti muse SEKALI setelah verifikasi sebelum klaim slot." data-en="You may change your muse ONCE after verification before claiming slot.">Boleh ganti muse SEKALI setelah verifikasi sebelum klaim slot.</div></div>
+                    <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="Boleh ganti karakter jika karakter utama/cadangan unver." data-en="OR, you may change your character if your main/alt 1 gets unverified.">Boleh ganti karakter jika karakter utama/cadangan unver.</div></div>
+                    <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Dilarang keras membawa konten SARA, NSFW, dan politik." data-en="Content related to SARA, NSFW, and politics is strictly prohibited.">Dilarang keras membawa konten SARA, NSFW, dan politik.</div></div>
+                </div>
+            </div>
+
+            <button class="read-more-btn" onclick="openRulesModal()">
+                <span class="lang" data-id="baca selengkapnya di sini ➔" data-en="read everything here ➔">baca selengkapnya di sini ➔</span>
+            </button>
         </div>
 
         <!-- DAMSELS & LADS (COMING SOON) -->
@@ -668,6 +719,32 @@
             // Nyalakan yang diklik
             document.getElementById('btn-' + side).classList.add('active');
             document.getElementById('content-' + side).classList.add('active');
+        }
+
+        // 8. LOGIKA TAB SYSTEM UNTUK RULES WIDGET & MODAL
+        function switchRulesTab(tab) {
+            document.getElementById('btn-tab1').classList.remove('active');
+            document.getElementById('btn-tab2').classList.remove('active');
+            document.getElementById('content-tab1').classList.remove('active');
+            document.getElementById('content-tab2').classList.remove('active');
+            
+            document.getElementById('btn-' + tab).classList.add('active');
+            document.getElementById('content-' + tab).classList.add('active');
+        }
+
+        function switchModalTab(tab) {
+            document.getElementById('btn-m-tab1').classList.remove('active');
+            document.getElementById('btn-m-tab2').classList.remove('active');
+            
+            // Menyembunyikan konten dengan display none manual melalui modifikasi class internal
+            document.getElementById('content-m-tab1').style.display = 'none';
+            document.getElementById('content-m-tab2').style.display = 'none';
+            
+            document.getElementById('btn-m-tab1').classList.remove('active');
+            document.getElementById('btn-m-tab2').classList.remove('active');
+            
+            document.getElementById('btn-m-' + tab).classList.add('active');
+            document.getElementById('content-m-' + tab).style.display = 'block';
         }
     </script>
 </body>
