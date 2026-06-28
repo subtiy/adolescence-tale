@@ -221,6 +221,30 @@
         .list-icon { width: 30px; height: 30px; background: var(--bold-pink); color: var(--bg-white); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 14px; flex-shrink: 0;}
         .list-text { font-size: 14px; font-weight: 600; line-height: 1.4; letter-spacing: -0.3px;}
 
+        /* Tombol Read More Rules */
+        .read-more-btn {
+            background: var(--accent-blue);
+            color: var(--bg-white);
+            border: none;
+            border-radius: 16px;
+            padding: 12px;
+            width: 100%;
+            margin-top: 10px;
+            font-family: var(--font-apple);
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--widget-shadow);
+        }
+        .read-more-btn:hover {
+            transform: translateY(-2px);
+            background: var(--bold-pink);
+        }
+        .read-more-btn:active {
+            transform: scale(0.96);
+        }
+
         /* Coming Soon Design */
         .coming-soon-box { background: var(--light-pink); border: 2px dashed var(--soft-pink); border-radius: 24px; padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;}
         .cs-icon { width: 50px; height: 50px; animation: app-pulse 2s infinite; }
@@ -432,9 +456,9 @@
                 <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="Tidak ada drama yang tidak perlu." data-en="No unnecessary drama.">Tidak ada drama yang tidak perlu.</div></div>
                 <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Bawa ide gila, no ghosting." data-en="Bring crazy ideas, no ghosting.">Bawa ide gila, no ghosting.</div></div>
                 
-                <!-- TOMBOL READ MORE DITAMBAH DI SINI -->
-                <button class="btn-action" style="width: 100%; margin-top: 5px;" onclick="openRulesModal()">
-                    <span class="lang" data-id="baca semuanya di sini ➔" data-en="read all rules here ➔">baca semuanya di sini ➔</span>
+                <!-- TOMBOL READ MORE -->
+                <button class="read-more-btn" onclick="openRulesModal()">
+                    <span class="lang" data-id="baca semuanya di sini ➔" data-en="read all rules ➔">baca semuanya di sini ➔</span>
                 </button>
             </div>
         </div>
