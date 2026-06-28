@@ -226,6 +226,11 @@
         .cs-icon { width: 50px; height: 50px; animation: app-pulse 2s infinite; }
 
         /* ================= MODAL POP-UP (PROFIL CREW) ================= */
+        /* Scrollbar khusus untuk daftar rules yang panjang di Pop-up */
+        .scrollable-list { max-height: 50vh; overflow-y: auto; text-align: left; padding-right: 8px; margin-top: 15px; }
+        .scrollable-list::-webkit-scrollbar { width: 6px; }
+        .scrollable-list::-webkit-scrollbar-thumb { background: var(--soft-pink); border-radius: 10px; }
+        
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(255, 232, 239, 0.7); 
@@ -278,6 +283,27 @@
             <div class="modal-name" id="modal-name">Nama</div>
             <div class="modal-role" id="modal-role">Role</div>
             <div class="modal-desc" id="modal-desc">Deskripsi lengkap karakter akan muncul di sini.</div>
+        </div>
+    </div>
+
+    <!-- MODAL POP-UP (RULES) -->
+    <div class="modal-overlay" id="rules-modal" onclick="closeRulesModal(event)">
+        <div class="modal-card" style="max-width: 350px;">
+            <button class="close-btn" onclick="closeRulesModal(event, true)">✕</button>
+            <div style="font-size: 40px; margin-bottom: 10px;">📌</div>
+            <div class="modal-name" style="font-size: 24px;">The Rules</div>
+            <div class="modal-desc" style="font-size: 13px;">Panduan lengkap komunitas kita.</div>
+            
+            <!-- Tempat kamu menaruh poin-poin yang buanyaaak -->
+            <div class="dense-list scrollable-list">
+                <!-- Tinggal copy-paste baris di bawah ini sebanyak rules yang kamu punya -->
+                <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Saling menghargai waktu dan energi." data-en="Respect each other's time and energy.">Saling menghargai waktu dan energi.</div></div>
+                <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="Tidak ada drama yang tidak perlu." data-en="No unnecessary drama.">Tidak ada drama yang tidak perlu.</div></div>
+                <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Bawa ide gila, no ghosting." data-en="Bring crazy ideas, no ghosting.">Bawa ide gila, no ghosting.</div></div>
+                <div class="list-item"><div class="list-icon">4</div><div class="list-text lang" data-id="Tambahkan aturan keempat di sini." data-en="Add the fourth rule here.">Tambahkan aturan keempat di sini.</div></div>
+                <div class="list-item"><div class="list-icon">5</div><div class="list-text lang" data-id="Aturan kelima yang mungkin cukup panjang teksnya." data-en="Fifth rule that might have a longer text.">Aturan kelima yang mungkin cukup panjang teksnya.</div></div>
+                <div class="list-item"><div class="list-icon">6</div><div class="list-text lang" data-id="Aturan keenam..." data-en="Sixth rule...">Aturan keenam...</div></div>
+            </div>
         </div>
     </div>
 
@@ -401,9 +427,15 @@
             <p class="widget-subtitle lang" data-id="aturan main kita" data-en="our ground rules">aturan main kita</p>
             
             <div class="dense-list">
-                <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Lorem ipsum pokoknya ok." data-en="Lorem ipsum pokoknya ok.">Lorem ipsum pokoknya ok.</div></div>
-                <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="Lorem ipsum pokoknya ok." data-en="Lorem ipsum pokoknya ok.">Lorem ipsum pokoknya ok.</div></div>
-                <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Lorem ipsum pokoknya ok." data-en="Lorem ipsum pokoknya ok.">Lorem ipsum pokoknya ok.</div></div>
+                <!-- Tampilkan 3 poin aja sebagai teaser -->
+                <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Saling menghargai waktu dan energi." data-en="Respect each other's time and energy.">Saling menghargai waktu dan energi.</div></div>
+                <div class="list-item"><div class="list-icon">2</div><div class="list-text lang" data-id="Tidak ada drama yang tidak perlu." data-en="No unnecessary drama.">Tidak ada drama yang tidak perlu.</div></div>
+                <div class="list-item"><div class="list-icon">3</div><div class="list-text lang" data-id="Bawa ide gila, no ghosting." data-en="Bring crazy ideas, no ghosting.">Bawa ide gila, no ghosting.</div></div>
+                
+                <!-- TOMBOL READ MORE DITAMBAH DI SINI -->
+                <button class="btn-action" style="width: 100%; margin-top: 5px;" onclick="openRulesModal()">
+                    <span class="lang" data-id="baca semuanya di sini ➔" data-en="read all rules here ➔">baca semuanya di sini ➔</span>
+                </button>
             </div>
         </div>
 
@@ -500,6 +532,17 @@
         function closeModal(event, forceClose = false) {
             if (forceClose || event.target.id === 'crew-modal') {
                 document.getElementById('crew-modal').classList.remove('active');
+            }
+        }
+
+        // 6. LOGIKA MODAL POP-UP RULES
+        function openRulesModal() {
+            document.getElementById('rules-modal').classList.add('active');
+        }
+
+        function closeRulesModal(event, forceClose = false) {
+            if (forceClose || event.target.id === 'rules-modal') {
+                document.getElementById('rules-modal').classList.remove('active');
             }
         }
     </script>
