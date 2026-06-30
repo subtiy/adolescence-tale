@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* ================= STRICT PALETTE & VARIABLES ================= */
         :root {
             --bg-white: #ffffff;
             --light-pink: #ffe8ef;
@@ -48,7 +47,6 @@
         h1, h2, h3, h4 { font-family: var(--font-apple); letter-spacing: -0.8px; }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
 
-        /* General Image styling agar tidak gepeng */
         .img-fit { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
         .icon-fit { width: 100%; height: 100%; object-fit: contain; }
 
@@ -155,13 +153,13 @@
             overflow-x: auto; 
             padding-bottom: 12px; 
             scroll-snap-type: x mandatory; 
-            -webkit-overflow-scrolling: touch; /* Wajib ada biar scroll di iPhone super mulus */
+            -webkit-overflow-scrolling: touch; 
         }
         .mood-btn { 
             scroll-snap-align: start;
             flex-shrink: 0;
-            width: 85px; /* Mengunci lebar gambar */
-            height: 85px; /* Mengunci tinggi biar tetap kotak */
+            width: 85px; 
+            height: 85px; 
             border-radius: 20px; 
             background: var(--light-pink); 
             display: flex; 
@@ -180,13 +178,12 @@
         }
         
         .mood-btn:focus, .mood-btn:active { 
-            outline: none; /* Menghilangkan garis aneh pas diklik */
+            outline: none;
         }
 
         .mood-btn.active { 
             background: var(--accent-blue); 
             box-shadow: var(--widget-shadow); 
-            /* Efek transform membesar & warna putih sudah dihapus */
         }
         
         /* Ring Progress */
@@ -197,7 +194,7 @@
         .ring-fill { fill: none; stroke: var(--bg-white); stroke-width: 8; stroke-dasharray: 251; stroke-dashoffset: 62; stroke-linecap: round; }
         .ring-text { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; font-weight: 800; font-size: 16px; letter-spacing: -0.5px; }
 
-        /* Apple Music Style Player */
+        /* Apple Music Player */
         .music-flex { display: flex; align-items: center; gap: 16px; background: var(--light-pink); padding: 12px; border-radius: 24px;}
         .art { width: 65px; height: 65px; background: var(--bg-white); border-radius: 70px; box-shadow: 0 4px 10px rgba(239, 122, 164, 0.1); animation: spin 10s linear infinite;}
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -253,7 +250,6 @@
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Gaya khusus kotak catatan/note agar stand out */
         .note-box {
             background: rgba(239, 122, 164, 0.08);
             border-left: 4px solid var(--bold-pink);
@@ -270,7 +266,6 @@
         .cs-icon { width: 50px; height: 50px; animation: app-pulse 2s infinite; }
 
         /* ================= MODAL POP-UP (PROFIL CREW) ================= */
-        /* Scrollbar khusus untuk daftar rules yang panjang di Pop-up */
         .scrollable-list { max-height: 50vh; overflow-y: auto; text-align: left; padding-right: 8px; margin-top: 15px; }
         .scrollable-list::-webkit-scrollbar { width: 6px; }
         .scrollable-list::-webkit-scrollbar-thumb { background: var(--soft-pink); border-radius: 10px; }
@@ -320,7 +315,6 @@
         .concept-quote-title { font-size: 16px; font-weight: 800; color: var(--bold-pink); margin-bottom: 8px; letter-spacing: -0.5px;}
         .concept-quote-text { font-size: 13px; line-height: 1.6; font-weight: 600; color: var(--soft-pink); }
 
-        /* Apple Segmented Control */
         .segmented-control { display: flex; background: var(--light-pink); border-radius: 14px; padding: 4px; margin-bottom: 20px; }
         .seg-btn { flex: 1; padding: 10px; border: none; background: transparent; border-radius: 10px; font-family: var(--font-apple); font-weight: 800; font-size: 13px; color: var(--soft-pink); cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .seg-btn.active { background: var(--bg-white); color: var(--bold-pink); box-shadow: 0 4px 12px rgba(239, 122, 164, 0.15); }
@@ -346,7 +340,6 @@
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal(event, true)">✕</button>
             <div class="modal-av" id="modal-icon">
-                <!-- Gambar avatar pop up akan dimuat lewat JS ke sini -->
             </div>
             <div class="modal-name" id="modal-name">Nama</div>
             <div class="modal-role" id="modal-role">Role</div>
@@ -361,13 +354,11 @@
             <div class="modal-name lang" data-id="The Rules" data-en="The Rules">The Rules</div>
             <div class="modal-desc lang" data-id="informasi lengkap persyaratan & aturan" data-en="full requirements & regulations detail">informasi lengkap persyaratan & aturan</div>
             
-            <!-- Tab Toggle di dalam Pop-up -->
             <div class="segmented-control" style="margin-top: 15px; margin-bottom: 10px;">
                 <button class="seg-btn active" id="btn-m-tab1" onclick="switchModalTab('tab1')">Apply Info</button>
                 <button class="seg-btn" id="btn-m-tab2" onclick="switchModalTab('tab2')">Full Rules</button>
             </div>
 
-            <!-- Konten Pop-up Tab 1: Who Can Apply -->
             <div class="modal-rules-content active" id="content-m-tab1">
                 <div class="dense-list scrollable-list">
                     <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Hanya individu yang memenuhi syarat yang boleh mendaftar keanggotaan." data-en="Only eligible individuals may apply for membership.">Hanya individu yang memenuhi syarat yang boleh mendaftar keanggotaan.</div></div>
@@ -375,7 +366,6 @@
                     <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Boleh dari kewarganegaraan mana saja." data-en="All nationalities are welcome.">Boleh dari kewarganegaraan mana saja.</div></div>
                     <div class="list-item"><div class="list-icon">✓</div><div class="list-text lang" data-id="Pilihan muse yang masih aktif berkarir dan nggak lagi terseret kontroversi atau skandal besar." data-en="Currently active in their careers and not involved in any ongoing controversies or major issues.">Pilihan muse yang masih aktif berkarir dan nggak lagi terseret kontroversi atau skandal besar.</div></div>
                     
-                    <!-- KOTAK CATATAN KHUSUS (NOTE) -->
                     <div class="note-box lang" 
                          data-id="⚠️ Muse yang lagi hiatus (contoh: sedang istirahat karena masalah kesehatan, tolong hargai waktu pemulihan mereka dan jangan pakai wajah mereka dulu sampai mereka comeback) dihitung sebagai nonaktif. Jadi, pastikan kamu riset dulu muse pilihanmu sebelum daftar, ya!" 
                          data-en="⚠️ Muses who are on hiatus (e.g. taking a break due to health reasons, please respect their time to recover and avoid using their face until they return) are considered inactive. So make sure to research your chosen muse before applying.">
@@ -384,7 +374,6 @@
                 </div>
             </div>
 
-            <!-- Konten Pop-up Tab 2: Rules Lengkap -->
             <div class="modal-rules-content" id="content-m-tab2">
                 <div class="dense-list scrollable-list">
                     <div class="list-item"><div class="list-icon">1</div><div class="list-text lang" data-id="Kamu boleh ganti muse SEKALI aja setelah verifikasi, tepat sebelum kamu klaim slot kamu (sistem siapa cepat dia dapat)." data-en="You may change your muse ONCE after verification before claiming your slot.">Kamu boleh ganti muse SEKALI aja setelah verifikasi, tepat sebelum kamu klaim slot kamu (sistem siapa cepat dia dapat).</div></div>
@@ -403,7 +392,6 @@
     <!-- SPLASH SCREEN -->
     <div id="splash">
         <div class="splash-logo">
-            <!-- GANTI NAMA FILE GAMBAR DI BAWAH INI -->
             <img src="walking.gif" alt="Logo" class="img-fit">
         </div>
         <div class="splash-text"> </div>
@@ -413,17 +401,14 @@
     <!-- BOTTOM APP DOCK -->
     <nav>
         <a href="https://adole-quiz.vercel.app" class="nav-item" target="_blank">
-            <!-- GANTI NAMA FILE GAMBAR DI BAWAH INI -->
             <img src="potion.png" alt="Quiz" class="nav-icon-img">
             <span>quiz</span>
         </a>
         <a href="#concept" class="nav-item">
-            <!-- GANTI NAMA FILE GAMBAR DI BAWAH INI -->
             <img src="tape.png" alt="Concept" class="nav-icon-img">
             <span class="lang" data-id="konsep" data-en="concept">konsep</span>
         </a>
         <a href="#crew" class="nav-item">
-            <!-- GANTI NAMA FILE GAMBAR DI BAWAH INI -->
             <img src="key.png" alt="Crew" class="nav-icon-img">
             <span>love-crew</span>
         </a>
@@ -444,7 +429,6 @@
             <h2 class="widget-title lang" data-id="gimana nih kabarmu?" data-en="how are you doing?">gimana nih kabarmu?</h2>
             <p class="widget-subtitle lang" data-id="tap perasaanmu hari ini!" data-en="tap your mood today!">tap perasaanmu hari ini!</p>
             <div class="mood-grid">
-                <!-- GANTI NAMA FILE GAMBAR DI BAWAH INI -->
                 <div class="mood-btn active" onclick="setMood(this)"><img src="in_love.gif" class="mood-img" alt="Mood"></div>
                 <div class="mood-btn" onclick="setMood(this)"><img src="burnout.gif" class="mood-img" alt="Mood"></div>
                 <div class="mood-btn" onclick="setMood(this)"><img src="crying.gif" class="mood-img" alt="Mood"></div>
@@ -452,7 +436,6 @@
             </div>
         </div>
 
-        <!-- ENERGY LEVEL -->
         <div class="widget w-blue">
             <div class="bg-shape"></div>
             <h2 class="widget-title">the hype meter</h2>
@@ -476,7 +459,6 @@
             <h2 class="widget-title" style="margin-bottom: 12px; font-size: 18px;">now playing</h2>
             <div class="music-flex">
                 <div class="art">
-                    <!-- GANTI NAMA FILE GAMBAR DI BAWAH INI -->
                     <img src="album-cover.jpg" alt="Album" class="img-fit">
                 </div>
                 <div class="music-info" style="flex-grow: 1;">
@@ -487,12 +469,10 @@
             </div>
         </div>
 
-        <!-- CONCEPT (INTERACTIVE MIXTAPE) -->
         <div class="widget w-white col-2" id="concept">
             <h2 class="widget-title lang" data-id="the concept" data-en="the concept">the concept</h2>
             <p class="widget-subtitle lang" data-id="baca baik-baik ya!" data-en="please read thoroughly!">baca baik-baik ya!</p>
             
-            <!-- 2 Kolom Intro -->
             <div class="concept-intro-grid">
                 <div class="concept-quote-box">
                     <div class="concept-quote-title">you seem pretty sad</div>
@@ -510,7 +490,6 @@
                 </div>
             </div>
 
-            <!-- Apple-style Toggle -->
             <div class="segmented-control">
                 <button class="seg-btn active" id="btn-side1" onclick="switchSide('side1')">Side A: Falling</button>
                 <button class="seg-btn" id="btn-side2" onclick="switchSide('side2')">Side B: Breaking</button>
@@ -569,7 +548,6 @@
             <p class="widget-subtitle lang" data-id="tap kartu untuk detail profil" data-en="tap card for profile details">tap kartu untuk detail profil</p>
             
             <div class="carousel-container">
-                <!-- GANTI NAMA FILE GAMBAR DI BAWAH INI SESUAI FOTO MEREKA -->
                 <div class="crew-card" onclick="openModal('Lorien')"><div class="crew-av"><img src="cat.png" alt="Lorien" class="img-fit"></div><h4>Lorien</h4><p>The Cat</p></div>
                 <div class="crew-card" onclick="openModal('Ocean')"><div class="crew-av"><img src="rooster.png" alt="Ocean" class="img-fit"></div><h4>Ocean</h4><p>The Rooster</p></div>
                 <div class="crew-card" onclick="openModal('Violet')"><div class="crew-av"><img src="koala.png" alt="Violet" class="img-fit"></div><h4>Violet</h4><p>The Koala</p></div>
@@ -615,7 +593,6 @@
             
             <div class="coming-soon-box">
                 <div class="cs-icon">
-                    <!-- GANTI NAMA FILE GAMBAR DI BAWAH INI -->
                     <img src="gembok.png" alt="Wait" class="icon-fit">
                 </div>
                 <h4 style="font-size: 18px; font-weight: 800; letter-spacing: -0.5px;">coming soon</h4>
@@ -717,13 +694,11 @@
 
         // 7. LOGIKA SEGMENTED CONTROL (KONSEP SIDE 1 & 2)
         function switchSide(side) {
-            // Matikan semua tombol dan konten
             document.getElementById('btn-side1').classList.remove('active');
             document.getElementById('btn-side2').classList.remove('active');
             document.getElementById('content-side1').classList.remove('active');
             document.getElementById('content-side2').classList.remove('active');
             
-            // Nyalakan yang diklik
             document.getElementById('btn-' + side).classList.add('active');
             document.getElementById('content-' + side).classList.add('active');
         }
