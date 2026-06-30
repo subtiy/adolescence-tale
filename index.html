@@ -636,7 +636,6 @@
         }
 
         // 5. DATA GAMBAR & LOGIKA MODAL POP-UP CREW
-        // PASTIKAN NAMA FILE DI BAWAH INI SAMA DENGAN YANG KAMU UPLOAD
         const crewData = {
             'Lorien': {
                 imageSrc: 'kepala_lorien.png',
@@ -715,13 +714,11 @@
         }
 
         function switchModalTab(tab) {
-            // Matikan semua tombol dan konten di dalam modal
             document.getElementById('btn-m-tab1').classList.remove('active');
             document.getElementById('btn-m-tab2').classList.remove('active');
             document.getElementById('content-m-tab1').classList.remove('active');
             document.getElementById('content-m-tab2').classList.remove('active');
             
-            // Nyalakan hanya tab yang sedang diklik
             document.getElementById('btn-m-' + tab).classList.add('active');
             document.getElementById('content-m-' + tab).classList.add('active');
         }
