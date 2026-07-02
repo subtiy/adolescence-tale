@@ -35,10 +35,15 @@
             background-color: var(--light-pink);
             color: var(--bold-pink);
             display: flex; flex-direction: column; align-items: center;
-            height: 100vh; overflow: hidden;
+            \
+            height: 100vh; 
+            height: 100dvh;
+            
+            overflow: hidden;
+            background-image: radial-gradient(rgba(242, 144, 179, 0.25) 1.5px, transparent 1.5px);
+            background-size: 20px 20px;
         }
 
-        /* Background Polka Aesthetic */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(rgba(242, 144, 179, 0.25) 1.5px, transparent 1.5px);
@@ -74,11 +79,9 @@
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* Animasi saat mengetik */
         .tile[data-state="tbd"] { border-color: var(--bold-pink); animation: pop 0.1s ease-in-out; }
         @keyframes pop { 50% { transform: scale(1.1); } }
 
-        /* Animasi saat salah kata (Goyang) */
         .row.shake { animation: shake 0.4s ease-in-out; }
         @keyframes shake {
             10%, 90% { transform: translateX(-4px); }
@@ -86,7 +89,6 @@
             50% { transform: translateX(-6px); }
         }
 
-        /* Animasi Balik Kartu (Flip) */
         .tile.flip { animation: flipIn 0.6s ease-in-out forwards; }
         @keyframes flipIn {
             0% { transform: rotateX(0deg); }
@@ -94,7 +96,6 @@
             100% { transform: rotateX(0deg); }
         }
 
-        /* Warna Status (Diaktifkan via JS setelah flip) */
         .tile.correct { background-color: var(--w-green) !important; color: white !important; border-color: var(--w-green) !important; }
         .tile.present { background-color: var(--w-yellow) !important; color: white !important; border-color: var(--w-yellow) !important; }
         .tile.absent { background-color: var(--w-gray) !important; color: white !important; border-color: var(--w-gray) !important; }
@@ -115,7 +116,6 @@
         .key:active { transform: scale(0.9); }
         .key.large { flex: 1.5; font-size: 12px; }
 
-        /* Warna Keyboard */
         .key.correct { background-color: var(--w-green); color: white; border-color: var(--w-green); }
         .key.present { background-color: var(--w-yellow); color: white; border-color: var(--w-yellow); }
         .key.absent { background-color: var(--w-gray); color: white; border-color: var(--w-gray); }
@@ -231,16 +231,12 @@
             "MANIS", "BAPER", "AKHIR", "PUISI", "PESAN"
         ];
 
-        // Sistem ganti kata harian otomatis (Day 1, Day 2, dst)
         const startDate = new Date("2024-01-01T00:00:00");
         const today = new Date();
         const diffInDays = Math.floor((today - startDate) / (1000 * 3600 * 24));
         const dayNumber = diffInDays + 1; 
         const TARGET_WORD = WORDS[diffInDays % WORDS.length];
 
-        // ==========================================
-        // 2. VARIABEL GAME & INISIALISASI BOARD
-        // ==========================================
         const board = document.getElementById("board");
         let currentRow = 0;
         let currentCol = 0;
@@ -263,9 +259,6 @@
             }
         }
 
-        // ==========================================
-        // 3. LOGIKA INPUT KEYBOARD & KLIK TILE
-        // ==========================================
         function addLetter(letter) {
             if (currentCol < 5 && !gameOver) {
                 guesses[currentRow][currentCol] = letter;
@@ -292,10 +285,6 @@
             toast.style.opacity = "1";
             setTimeout(() => { toast.style.opacity = "0"; }, 1500);
         }
-
-        // ==========================================
-        // 4. PENGECEKAN KATA (WORDLE LOGIC)
-        // ==========================================
         function checkWord() {
             if (currentCol !== 5) {
                 showToast("Kata harus 5 huruf!");
@@ -313,17 +302,15 @@
             let tileColors = ["absent", "absent", "absent", "absent", "absent"];
             let emojiRow = ["⬜", "⬜", "⬜", "⬜", "⬜"];
 
-            // Pengecekan ke-1: Huruf yang benar posisi (Hijau)
             for (let i = 0; i < 5; i++) {
                 if (guessArr[i] === targetCopy[i]) {
                     tileColors[i] = "correct";
                     emojiRow[i] = "🟩";
-                    targetCopy[i] = null; // Tandai agar tidak dihitung ulang
+                    targetCopy[i] = null;
                     guessArr[i] = null;
                 }
             }
 
-            // Pengecekan ke-2: Huruf yang salah posisi tapi ada (Kuning)
             for (let i = 0; i < 5; i++) {
                 if (guessArr[i] !== null && targetCopy.includes(guessArr[i])) {
                     tileColors[i] = "present";
@@ -334,7 +321,6 @@
 
             shareGrid.push(emojiRow.join(""));
 
-            // Animasikan kartu dibalik dan ubah warna keyboard on-screen
             let delay = 0;
             for (let i = 0; i < 5; i++) {
                 const tile = document.getElementById(`tile-${currentRow}-${i}`);
@@ -344,7 +330,6 @@
                     tile.classList.add("flip");
                     tile.classList.add(tileColors[i]);
                     
-                    // Update warna keyboard (Hanya update jika belum hijau)
                     const keyBtn = document.querySelector(`.key[data-key="${letter}"]`);
                     if (!keyBtn.classList.contains("correct")) {
                         keyBtn.classList.remove("present", "absent");
@@ -354,7 +339,6 @@
                 delay += 250; // Jeda antar huruf 0.25 detik
             }
 
-            // Cek Menang atau Kalah setelah animasi selesai
             setTimeout(() => {
                 if (guessString === TARGET_WORD) {
                     gameOver = true;
@@ -370,9 +354,6 @@
             }, 1500); 
         }
 
-        // ==========================================
-        // 5. EVENT LISTENER KEYBOARD (TOUCH & FISIK)
-        // ==========================================
         document.querySelectorAll(".key").forEach(key => {
             key.addEventListener("click", () => {
                 if (gameOver) return;
@@ -388,7 +369,6 @@
             });
         });
 
-        // Dukungan Keyboard Fisik (PC/Mac)
         document.addEventListener("keydown", (e) => {
             if (gameOver) return;
             const key = e.key.toUpperCase();
@@ -402,9 +382,6 @@
             }
         });
 
-        // ==========================================
-        // 6. MODAL HASIL & FITUR SHARE
-        // ==========================================
         function showResult(isWin) {
             const modal = document.getElementById("result-modal");
             const title = document.getElementById("modal-title");
