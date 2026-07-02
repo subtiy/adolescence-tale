@@ -163,7 +163,7 @@
 
     <header>
         <a href="index.html" class="back-btn">← Back</a>
-        <div class="title">Lovele ✨</div>
+        <div class="title">ADO-DLE</div>
         <div style="width: 70px;"></div>
     </header>
 
@@ -228,7 +228,7 @@
         const WORDS = [
             "CINTA", "KISAH", "RINDU", "NOVEL", "FOKUS", 
             "KASIH", "TEMAN", "TULIS", "SUARA", "BACA", 
-            "MANIS", "BAPER", "AKHIR", "AWAL", "PESAN"
+            "MANIS", "BAPER", "AKHIR", "PUISI", "PESAN"
         ];
 
         // Sistem ganti kata harian otomatis (Day 1, Day 2, dst)
@@ -412,13 +412,13 @@
             const emoji = document.getElementById("modal-emoji");
 
             if (isWin) {
-                emoji.innerText = "✨";
-                title.innerText = "Aesthetic!";
-                desc.innerText = `Kamu berhasil menebak kata hari ini dalam ${currentRow + 1}/6 percobaan!`;
+                emoji.innerText = "";
+                title.innerText = "yeay!";
+                desc.innerText = `kamu berhasil menebak kata hari ini dalam ${currentRow + 1}/6 percobaan!`;
             } else {
                 emoji.innerText = "💔";
-                title.innerText = "Oopsie!";
-                desc.innerText = `Sayang sekali! Kata hari ini adalah ${TARGET_WORD}. Coba lagi besok ya!`;
+                title.innerText = "yaaah..";
+                desc.innerText = `sayang sekali! kata hari ini adalah ${TARGET_WORD}. coba lagi besok ya!`;
             }
 
             setTimeout(() => {
@@ -430,13 +430,13 @@
             // Cek kalau dia menang atau kalah untuk nulis skor "X/6" atau "angka/6"
             const attempt = gameOver && shareGrid[shareGrid.length - 1] === "🟩🟩🟩🟩🟩" ? currentRow + 1 : "X";
             
-            let text = `Lovele Day ${dayNumber} - ${attempt}/6 ✨\n\n`;
+            let text = `Ado-Dle Day ${dayNumber} - ${attempt}/6 ✨\n\n`;
             text += shareGrid.join("\n");
-            text += `\n\nMainkan di: [MASUKIN LINK VERCEL KAMU]`;
+            text += `\n\nChallenge your friends at: https://adolescence-tale.netlify.app/wordle.html `;
 
             if (navigator.share) {
                 navigator.share({
-                    title: 'Lovele Score',
+                    title: 'Ado-Dle Score',
                     text: text,
                 }).catch(console.error);
             } else {
