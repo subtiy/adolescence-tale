@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADOLE MATCH-UP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Quicksand:wght@600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-white: #ffffff;
+            --light-pink: #ffe8ef;
+            --soft-pink: #f290b3;
+            --bold-pink: #ef7aa4;
+            --accent-blue: #6eaff0;
+            --text-dark: #f290b3;
+            
+            --font-apple: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", sans-serif;
+            --app-shadow: 0 12px 35px rgba(239, 122, 164, 0.12);
+            --widget-shadow: 0 8px 22px rgba(110, 175, 240, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: var(--font-apple);
+            background-color: var(--light-pink);
+            color: var(--bold-pink);
+            overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            /* Polka dots background */
+            background-image: radial-gradient(rgba(242, 144, 179, 0.25) 1.5px, transparent 1.5px);
+            background-size: 20px 20px;
+        }
+
+        .icon-fit { width: 70%; height: 70%; object-fit: contain; padding: 8px; }
+
+        .top-nav {
+            width: 100%; max-width: 500px; padding: 20px;
+            display: flex: space-between; align-items: center;
+        }
+        .back-btn {
+            background: var(--bg-white); color: var(--accent-blue); padding: 10px 18px;
+            border-radius: 20px; font-weight: 800; font-size: 14px; text-decoration: none;
+            box-shadow: var(--widget-shadow); transition: 0.2s;
+        }
+        .back-btn:active { transform: scale(0.9); }
+        .nav-title { font-size: 22px; font-weight: 900; color: var(--bold-pink); }
+
+        /* ================= HEADER SECTION ================= */
+        .header-area { text-align: center; margin-top: 30px; margin-bottom: 20px; }
+        .main-title { font-size: 30px; font-weight: 900; color: var(--bold-pink); line-height: 1; margin-bottom: 8px; }
+        .sub-title { font-size: 14px; font-weight: 600; color: var(--soft-pink); font-style: italic; }
+        
+        /* ================= GAME DASHBOARD (STATS) ================= */
+        .stats-widget {
+            width: 90%; max-width: 500px; background: var(--bg-white);
+            border-radius: 28px; padding: 20px; display: flex; justify-content: space-around;
+            box-shadow: var(--app-shadow); margin-bottom: 20px;
+            animation: spring-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .stat-box { display: flex; flex-direction: column; align-items: center; }
+        .stat-label { font-size: 12px; font-weight: 700; color: var(--soft-pink); text-transform: uppercase; margin-bottom: 4px; }
+        .stat-value { font-size: 28px; font-weight: 900; color: var(--accent-blue); font-family: 'Quicksand'; }
+
+        /* ================= GAME BOARD (4x4 GRID) ================= */
+        .game-board {
+            width: 90%; max-width: 500px;
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 12px; margin-bottom: 40px;
+            animation: spring-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card {
+            position: relative; width: 100%; aspect-ratio: 1;
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        .card:active { transform: scale(0.95); }
+        
+        .card.flip { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 20px;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 6px 15px rgba(239, 122, 164, 0.15); overflow: hidden;
+        }
+        
+        .card-back {
+            background: var(--accent-blue); font-size: 32px;
+        }
+        
+        .card-front {
+            background: var(--bg-white); transform: rotateY(180deg);
+        }
+        .card-front img { width: 80%; height: 80%; object-fit: contain; pointer-events: none; }
+
+        @keyframes spring-in { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+        /* ================= MODAL VICTORY (POP UP HASIL) ================= */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 232, 239, 0.75); backdrop-filter: blur(10px);
+            z-index: 10000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-card {
+            background: var(--bg-white); border-radius: 35px; padding: 40px 30px;
+            width: 85%; max-width: 350px; text-align: center;
+            box-shadow: 0 20px 50px rgba(239, 122, 164, 0.25);
+            transform: scale(0.8) translateY(30px); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid var(--light-pink);
+        }
+        .modal-overlay.active .modal-card { transform: scale(1) translateY(0); }
+        
+        .victory-icon { font-size: 60px; margin-bottom: 10px; animation: app-pulse 2s infinite; }
+        .victory-title { font-size: 32px; font-weight: 900; color: var(--bold-pink); margin-bottom: 5px; }
+        .victory-subtitle { font-size: 14px; font-weight: 600; color: var(--soft-pink); margin-bottom: 25px; line-height: 1.5;}
+        
+        .result-flex { display: flex; justify-content: space-between; background: var(--light-pink); padding: 15px 25px; border-radius: 20px; margin-bottom: 25px; }
+        .result-box h4 { font-size: 12px; color: var(--soft-pink); text-transform: uppercase; margin-bottom: 5px; }
+        .result-box p { font-size: 24px; font-weight: 900; color: var(--accent-blue); }
+
+        .btn-flex { display: flex; flex-direction: column; gap: 10px; }
+        .btn-primary { background: var(--accent-blue); color: var(--bg-white); padding: 14px; border-radius: 20px; font-weight: 800; font-family: 'Quicksand'; font-size: 16px; border: none; cursor: pointer; transition: 0.2s; box-shadow: var(--widget-shadow); }
+        .btn-primary:active { transform: scale(0.95); }
+        .btn-secondary { background: var(--bg-white); color: var(--bold-pink); padding: 14px; border-radius: 20px; font-weight: 800; font-family: 'Quicksand'; font-size: 16px; border: 2px solid var(--light-pink); cursor: pointer; transition: 0.2s; }
+        .btn-secondary:active { background: var(--light-pink); transform: scale(0.95); }
+
+        @keyframes app-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.9); } }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <div class="header-area">
+             <h1 class="main-title">adole match-up!</h1>
+        <p class="sub-title">think you're fast? beat the clock!</p>
+    </div>
+        <div style="width: 70px;"></div>
+    </div>
+
+    <div class="stats-widget">
+        <div class="stat-box">
+            <span class="stat-label">time</span>
+            <span class="stat-value" id="time-display">00:00</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-label">flips</span>
+            <span class="stat-value" id="flips-display">0</span>
+        </div>
+    </div>
+
+    <div class="game-board" id="game-board"></div>
+
+    <div class="modal-overlay" id="victory-modal">
+        <div class="modal-card">
+            <div class="victory-icon"></div>
+            <h2 class="victory-title">congratulations!</h2>
+            <p class="victory-subtitle">you've completed our game, ready to challenge your friends? ;)</p>
+            
+            <div class="result-flex">
+                <div class="result-box">
+                    <h4>time</h4>
+                    <p id="final-time">00:00</p>
+                </div>
+                <div class="result-box">
+                    <h4>Flips</h4>
+                    <p id="final-flips">0</p>
+                </div>
+            </div>
+
+            <div class="btn-flex">
+                <button class="btn-primary" onclick="shareScore()">share my score</button>
+                <button class="btn-secondary" onclick="restartGame()">play again!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT GAME LOGIC -->
+    <script>
+        const images = [
+            'rooster.png', 'gembok.png', 'key.png', 'koala.png',
+            'cat.png', 'tape.png', 'potion.png', 'seal.png'
+        ];
+        
+        // Gandakan array gambar jadi 16 (buat pasangannya)
+        let cardArray = [...images, ...images];
+
+        // Variabel Game
+        let hasFlippedCard = false;
+        let lockBoard = false;
+        let firstCard, secondCard;
+        let matches = 0;
+        let flips = 0;
+        
+        // Variabel Timer
+        let seconds = 0;
+        let timerInterval = null;
+        let gameStarted = false;
+
+        const board = document.getElementById('game-board');
+        const flipsDisplay = document.getElementById('flips-display');
+        const timeDisplay = document.getElementById('time-display');
+
+        function initGame() {
+            // Acak urutan kartu (Fisher-Yates Shuffle)
+            cardArray.sort(() => 0.5 - Math.random());
+
+            // Kosongkan papan
+            board.innerHTML = '';
+
+            cardArray.forEach(imgSrc => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.name = imgSrc; // Tanda pengenal buat nyocokin
+                
+                card.innerHTML = `
+                    <div class="card-face card-front">
+                        <img src="${imgSrc}" alt="Card Image">
+                    </div>
+                    <div class="card-face card-back">
+                        <img src="icon_maskot.png" alt="card" class="icon-fit">
+                    </div> 
+                `;
+                
+                card.addEventListener('click', flipCard);
+                board.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return; 
+
+            if (!gameStarted) {
+                startTimer();
+                gameStarted = true;
+            }
+
+            this.classList.add('flip');
+
+            if (!hasFlippedCard) {
+                hasFlippedCard = true;
+                firstCard = this;
+                return;
+            }
+
+            secondCard = this;
+            updateFlips();
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            let isMatch = firstCard.dataset.name === secondCard.dataset.name;
+            isMatch ? disableCards() : unflipCards();
+        }
+
+        function disableCards() {
+            firstCard.removeEventListener('click', flipCard);
+            secondCard.removeEventListener('click', flipCard);
+            matches++;
+
+            resetBoard();
+
+            if (matches === 8) {
+                endGame();
+            }
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            setTimeout(() => {
+                firstCard.classList.remove('flip');
+                secondCard.classList.remove('flip');
+                resetBoard();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            [hasFlippedCard, lockBoard] = [false, false];
+            [firstCard, secondCard] = [null, null];
+        }
+
+        function updateFlips() {
+            flips++;
+            flipsDisplay.innerText = flips;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                seconds++;
+                let mins = Math.floor(seconds / 60);
+                let secs = seconds % 60;
+                timeDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            
+            document.getElementById('final-time').innerText = timeDisplay.innerText;
+            document.getElementById('final-flips').innerText = flips;
+            
+            setTimeout(() => {
+                document.getElementById('victory-modal').classList.add('active');
+            }, 500); 
+        }
+
+        function restartGame() {
+            document.getElementById('victory-modal').classList.remove('active');
+            matches = 0;
+            flips = 0;
+            seconds = 0;
+            gameStarted = false;
+            flipsDisplay.innerText = '0';
+            timeDisplay.innerText = '00:00';
+            clearInterval(timerInterval);
+            initGame();
+        }
+
+        function shareScore() {
+            const time = timeDisplay.innerText;
+            const text = `I successfully finished Adole Match-Up in ${time} with ${flips} flips! Beat my score at https://adole-match-up.vercel.app`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'my adole-match-up score!',
+                    text: text,
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(text);
+                alert("skor udah di-copy!");
+            }
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
