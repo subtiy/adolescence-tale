@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <!-- Mencegah zoom otomatis di HP biar keyboard layar lancar -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADO-DLE | DAILY WORD GAME</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Quicksand:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================= PALETTE & TEMA ================= */
+        :root {
+            --bg-white: #ffffff;
+            --light-pink: #ffe8ef;
+            --soft-pink: #f290b3;
+            --bold-pink: #ef7aa4;
+            --accent-blue: #6eaff0;
+            --text-dark: #f290b3;
+            
+            /* Warna Khusus Wordle yang Disesuaikan (Pastel Aesthetic) */
+            --w-green: #98ddb9;   /* Soft Green */
+            --w-yellow: #ffe18b;  /* Soft Yellow */
+            --w-gray: #d4d4d4;    /* Soft Gray */
+            
+            --font-apple: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+            --widget-shadow: 0 8px 22px rgba(239, 122, 164, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            font-family: var(--font-apple);
+            background-color: var(--light-pink);
+            color: var(--bold-pink);
+            display: flex; flex-direction: column; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+
+        /* Background Polka Aesthetic */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(242, 144, 179, 0.25) 1.5px, transparent 1.5px);
+            background-size: 20px 20px; z-index: -1; pointer-events: none;
+        }
+
+        /* ================= HEADER ================= */
+        header {
+            width: 100%; max-width: 500px; padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px dashed var(--soft-pink); margin-bottom: 20px;
+        }
+        .back-btn { background: var(--bg-white); color: var(--accent-blue); padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 13px; text-decoration: none; box-shadow: var(--widget-shadow); transition: 0.2s; }
+        .back-btn:active { transform: scale(0.9); }
+        .title { font-family: 'Quicksand', sans-serif; font-size: 28px; font-weight: 900; letter-spacing: -1px; }
+
+        /* ================= GAME BOARD ================= */
+        #board-container {
+            flex-grow: 1; display: flex; justify-content: center; align-items: center; width: 100%;
+        }
+        #board {
+            display: grid; grid-template-rows: repeat(6, 1fr); gap: 8px; padding: 10px; box-sizing: border-box;
+            width: 320px; max-width: 90vw;
+        }
+        .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        
+        .tile {
+            width: 100%; aspect-ratio: 1; border: 2px solid var(--soft-pink);
+            border-radius: 12px; display: flex; justify-content: center; align-items: center;
+            font-size: 32px; font-weight: 800; font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-white); color: var(--bold-pink);
+            text-transform: uppercase; user-select: none;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Animasi saat mengetik */
+        .tile[data-state="tbd"] { border-color: var(--bold-pink); animation: pop 0.1s ease-in-out; }
+        @keyframes pop { 50% { transform: scale(1.1); } }
+
+        /* Animasi saat salah kata (Goyang) */
+        .row.shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake {
+            10%, 90% { transform: translateX(-4px); }
+            30%, 70% { transform: translateX(4px); }
+            50% { transform: translateX(-6px); }
+        }
+
+        /* Animasi Balik Kartu (Flip) */
+        .tile.flip { animation: flipIn 0.6s ease-in-out forwards; }
+        @keyframes flipIn {
+            0% { transform: rotateX(0deg); }
+            50% { transform: rotateX(90deg); }
+            100% { transform: rotateX(0deg); }
+        }
+
+        /* Warna Status (Diaktifkan via JS setelah flip) */
+        .tile.correct { background-color: var(--w-green) !important; color: white !important; border-color: var(--w-green) !important; }
+        .tile.present { background-color: var(--w-yellow) !important; color: white !important; border-color: var(--w-yellow) !important; }
+        .tile.absent { background-color: var(--w-gray) !important; color: white !important; border-color: var(--w-gray) !important; }
+
+        /* ================= KEYBOARD ON SCREEN ================= */
+        #keyboard-container {
+            width: 100%; max-width: 500px; padding: 10px 10px 20px; user-select: none;
+        }
+        .keyboard-row {
+            display: flex; justify-content: center; width: 100%; margin: 0 auto 8px; touch-action: manipulation;
+        }
+        .key {
+            font-family: var(--font-apple); font-weight: 700; font-size: 14px;
+            background-color: var(--bg-white); color: var(--bold-pink); border: 2px solid var(--light-pink);
+            border-radius: 12px; height: 50px; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            flex: 1; margin: 0 3px; transition: 0.2s; box-shadow: 0 4px 10px rgba(239, 122, 164, 0.1);
+        }
+        .key:active { transform: scale(0.9); }
+        .key.large { flex: 1.5; font-size: 12px; }
+
+        /* Warna Keyboard */
+        .key.correct { background-color: var(--w-green); color: white; border-color: var(--w-green); }
+        .key.present { background-color: var(--w-yellow); color: white; border-color: var(--w-yellow); }
+        .key.absent { background-color: var(--w-gray); color: white; border-color: var(--w-gray); }
+
+        /* ================= MODAL NOTIFIKASI & SKOR ================= */
+        #toast {
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+            background: var(--bold-pink); color: white; padding: 12px 24px;
+            border-radius: 20px; font-weight: 700; opacity: 0; transition: 0.3s;
+            pointer-events: none; z-index: 1000; box-shadow: var(--widget-shadow);
+        }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 232, 239, 0.8); backdrop-filter: blur(10px);
+            z-index: 10000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-card {
+            background: var(--bg-white); border-radius: 35px; padding: 35px 25px;
+            width: 85%; max-width: 320px; text-align: center;
+            box-shadow: 0 20px 50px rgba(239, 122, 164, 0.25);
+            transform: scale(0.8) translateY(30px); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid var(--light-pink);
+        }
+        .modal-overlay.active .modal-card { transform: scale(1) translateY(0); }
+        
+        .modal-icon { font-size: 50px; margin-bottom: 10px; }
+        .modal-title { font-family: 'Quicksand'; font-size: 26px; font-weight: 900; color: var(--bold-pink); margin-bottom: 5px; }
+        .modal-desc { font-size: 14px; font-weight: 600; color: var(--soft-pink); margin-bottom: 25px; line-height: 1.5; }
+        .share-btn {
+            background: var(--accent-blue); color: var(--bg-white); padding: 14px;
+            border-radius: 20px; font-weight: 800; font-family: 'Quicksand'; font-size: 16px;
+            border: none; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: var(--widget-shadow);
+        }
+        .share-btn:active { transform: scale(0.95); }
+
+        @media (max-width: 400px) {
+            .key { height: 45px; margin: 0 2px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-btn">← Back</a>
+        <div class="title">Lovele ✨</div>
+        <div style="width: 70px;"></div>
+    </header>
+
+    <div id="toast">not enough letters</div>
+
+    <div id="board-container">
+        <div id="board"></div>
+    </div>
+
+    <div id="keyboard-container">
+        <div class="keyboard-row">
+            <button class="key" data-key="Q">Q</button>
+            <button class="key" data-key="W">W</button>
+            <button class="key" data-key="E">E</button>
+            <button class="key" data-key="R">R</button>
+            <button class="key" data-key="T">T</button>
+            <button class="key" data-key="Y">Y</button>
+            <button class="key" data-key="U">U</button>
+            <button class="key" data-key="I">I</button>
+            <button class="key" data-key="O">O</button>
+            <button class="key" data-key="P">P</button>
+        </div>
+        <div class="keyboard-row" style="width: 90%;">
+            <button class="key" data-key="A">A</button>
+            <button class="key" data-key="S">S</button>
+            <button class="key" data-key="D">D</button>
+            <button class="key" data-key="F">F</button>
+            <button class="key" data-key="G">G</button>
+            <button class="key" data-key="H">H</button>
+            <button class="key" data-key="J">J</button>
+            <button class="key" data-key="K">K</button>
+            <button class="key" data-key="L">L</button>
+        </div>
+        <div class="keyboard-row">
+            <button class="key large" data-key="ENTER">ENTER</button>
+            <button class="key" data-key="Z">Z</button>
+            <button class="key" data-key="X">X</button>
+            <button class="key" data-key="C">C</button>
+            <button class="key" data-key="V">V</button>
+            <button class="key" data-key="B">B</button>
+            <button class="key" data-key="N">N</button>
+            <button class="key" data-key="M">M</button>
+            <button class="key large" data-key="BACKSPACE">⌫</button>
+        </div>
+    </div>
+
+    <!-- MODAL HASIL -->
+    <div class="modal-overlay" id="result-modal">
+        <div class="modal-card">
+            <div class="modal-icon" id="modal-emoji"></div>
+            <h2 class="modal-title" id="modal-title">kamu keren!</h2>
+            <p class="modal-desc" id="modal-desc">Kata hari ini berhasil kamu tebak. temenmu bisa nebak juga nggak ya?</p>
+            <button class="share-btn" onclick="shareResult()">🔗 Share Result</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. DAFTAR KATA & LOGIKA HARIAN
+        // ==========================================
+        // Bebas ganti kata-katanya asal jumlahnya pas 5 HURUF
+        const WORDS = [
+            "CINTA", "KISAH", "RINDU", "NOVEL", "FOKUS", 
+            "KASIH", "TEMAN", "TULIS", "SUARA", "BACA", 
+            "MANIS", "BAPER", "AKHIR", "AWAL", "PESAN"
+        ];
+
+        // Sistem ganti kata harian otomatis (Day 1, Day 2, dst)
+        const startDate = new Date("2024-01-01T00:00:00");
+        const today = new Date();
+        const diffInDays = Math.floor((today - startDate) / (1000 * 3600 * 24));
+        const dayNumber = diffInDays + 1; 
+        const TARGET_WORD = WORDS[diffInDays % WORDS.length];
+
+        // ==========================================
+        // 2. VARIABEL GAME & INISIALISASI BOARD
+        // ==========================================
+        const board = document.getElementById("board");
+        let currentRow = 0;
+        let currentCol = 0;
+        let gameOver = false;
+        let guesses = Array(6).fill().map(() => Array(5).fill(""));
+        let shareGrid = []; // Nyimpan emoji share (🟩🟨⬜)
+
+        function initBoard() {
+            for (let r = 0; r < 6; r++) {
+                const row = document.createElement("div");
+                row.className = "row";
+                row.id = `row-${r}`;
+                for (let c = 0; c < 5; c++) {
+                    const tile = document.createElement("div");
+                    tile.className = "tile";
+                    tile.id = `tile-${r}-${c}`;
+                    row.appendChild(tile);
+                }
+                board.appendChild(row);
+            }
+        }
+
+        // ==========================================
+        // 3. LOGIKA INPUT KEYBOARD & KLIK TILE
+        // ==========================================
+        function addLetter(letter) {
+            if (currentCol < 5 && !gameOver) {
+                guesses[currentRow][currentCol] = letter;
+                const tile = document.getElementById(`tile-${currentRow}-${currentCol}`);
+                tile.innerText = letter;
+                tile.setAttribute("data-state", "tbd"); // Memanggil animasi pop saat ngetik
+                currentCol++;
+            }
+        }
+
+        function deleteLetter() {
+            if (currentCol > 0 && !gameOver) {
+                currentCol--;
+                guesses[currentRow][currentCol] = "";
+                const tile = document.getElementById(`tile-${currentRow}-${currentCol}`);
+                tile.innerText = "";
+                tile.removeAttribute("data-state");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.style.opacity = "1";
+            setTimeout(() => { toast.style.opacity = "0"; }, 1500);
+        }
+
+        // ==========================================
+        // 4. PENGECEKAN KATA (WORDLE LOGIC)
+        // ==========================================
+        function checkWord() {
+            if (currentCol !== 5) {
+                showToast("Kata harus 5 huruf!");
+                document.getElementById(`row-${currentRow}`).classList.add("shake");
+                setTimeout(() => {
+                    document.getElementById(`row-${currentRow}`).classList.remove("shake");
+                }, 400);
+                return;
+            }
+
+            const guessString = guesses[currentRow].join("");
+            
+            let targetCopy = TARGET_WORD.split("");
+            let guessArr = guessString.split("");
+            let tileColors = ["absent", "absent", "absent", "absent", "absent"];
+            let emojiRow = ["⬜", "⬜", "⬜", "⬜", "⬜"];
+
+            // Pengecekan ke-1: Huruf yang benar posisi (Hijau)
+            for (let i = 0; i < 5; i++) {
+                if (guessArr[i] === targetCopy[i]) {
+                    tileColors[i] = "correct";
+                    emojiRow[i] = "🟩";
+                    targetCopy[i] = null; // Tandai agar tidak dihitung ulang
+                    guessArr[i] = null;
+                }
+            }
+
+            // Pengecekan ke-2: Huruf yang salah posisi tapi ada (Kuning)
+            for (let i = 0; i < 5; i++) {
+                if (guessArr[i] !== null && targetCopy.includes(guessArr[i])) {
+                    tileColors[i] = "present";
+                    emojiRow[i] = "🟨";
+                    targetCopy[targetCopy.indexOf(guessArr[i])] = null;
+                }
+            }
+
+            shareGrid.push(emojiRow.join(""));
+
+            // Animasikan kartu dibalik dan ubah warna keyboard on-screen
+            let delay = 0;
+            for (let i = 0; i < 5; i++) {
+                const tile = document.getElementById(`tile-${currentRow}-${i}`);
+                const letter = guesses[currentRow][i];
+                
+                setTimeout(() => {
+                    tile.classList.add("flip");
+                    tile.classList.add(tileColors[i]);
+                    
+                    // Update warna keyboard (Hanya update jika belum hijau)
+                    const keyBtn = document.querySelector(`.key[data-key="${letter}"]`);
+                    if (!keyBtn.classList.contains("correct")) {
+                        keyBtn.classList.remove("present", "absent");
+                        keyBtn.classList.add(tileColors[i]);
+                    }
+                }, delay);
+                delay += 250; // Jeda antar huruf 0.25 detik
+            }
+
+            // Cek Menang atau Kalah setelah animasi selesai
+            setTimeout(() => {
+                if (guessString === TARGET_WORD) {
+                    gameOver = true;
+                    showResult(true);
+                } else {
+                    currentRow++;
+                    currentCol = 0;
+                    if (currentRow === 6) {
+                        gameOver = true;
+                        showResult(false);
+                    }
+                }
+            }, 1500); 
+        }
+
+        // ==========================================
+        // 5. EVENT LISTENER KEYBOARD (TOUCH & FISIK)
+        // ==========================================
+        document.querySelectorAll(".key").forEach(key => {
+            key.addEventListener("click", () => {
+                if (gameOver) return;
+                const letter = key.getAttribute("data-key");
+                
+                if (letter === "ENTER") {
+                    checkWord();
+                } else if (letter === "BACKSPACE") {
+                    deleteLetter();
+                } else {
+                    addLetter(letter);
+                }
+            });
+        });
+
+        // Dukungan Keyboard Fisik (PC/Mac)
+        document.addEventListener("keydown", (e) => {
+            if (gameOver) return;
+            const key = e.key.toUpperCase();
+            
+            if (key === "ENTER") {
+                checkWord();
+            } else if (key === "BACKSPACE") {
+                deleteLetter();
+            } else if (/^[A-Z]$/.test(key)) {
+                addLetter(key);
+            }
+        });
+
+        // ==========================================
+        // 6. MODAL HASIL & FITUR SHARE
+        // ==========================================
+        function showResult(isWin) {
+            const modal = document.getElementById("result-modal");
+            const title = document.getElementById("modal-title");
+            const desc = document.getElementById("modal-desc");
+            const emoji = document.getElementById("modal-emoji");
+
+            if (isWin) {
+                emoji.innerText = "✨";
+                title.innerText = "Aesthetic!";
+                desc.innerText = `Kamu berhasil menebak kata hari ini dalam ${currentRow + 1}/6 percobaan!`;
+            } else {
+                emoji.innerText = "💔";
+                title.innerText = "Oopsie!";
+                desc.innerText = `Sayang sekali! Kata hari ini adalah ${TARGET_WORD}. Coba lagi besok ya!`;
+            }
+
+            setTimeout(() => {
+                modal.classList.add("active");
+            }, 200);
+        }
+
+        function shareResult() {
+            // Cek kalau dia menang atau kalah untuk nulis skor "X/6" atau "angka/6"
+            const attempt = gameOver && shareGrid[shareGrid.length - 1] === "🟩🟩🟩🟩🟩" ? currentRow + 1 : "X";
+            
+            let text = `Lovele Day ${dayNumber} - ${attempt}/6 ✨\n\n`;
+            text += shareGrid.join("\n");
+            text += `\n\nMainkan di: [MASUKIN LINK VERCEL KAMU]`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Lovele Score',
+                    text: text,
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(text);
+                alert("Skor udah di-copy! Tinggal paste ke sosmed kamu 💌");
+            }
+        }
+
+        // Panggil fungsi pembuat papan saat web dibuka
+        initBoard();
+    </script>
+</body>
+</html>
